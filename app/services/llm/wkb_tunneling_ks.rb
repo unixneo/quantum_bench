@@ -13,8 +13,8 @@ module Llm
       response_text = request_completion(build_prompt(problem), model_version)
       elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time) * 1000).round
 
-      parsed_values, gamma_value = parse_tunneling_values(response_text)
-      stored_raw_response = format_raw_response(response_text, gamma_value)
+      parsed_values, step4_gamma = parse_tunneling_values(response_text)
+      stored_raw_response = format_raw_response(response_text, step4_gamma)
 
       Experiment.create!(
         problem: problem,
@@ -36,10 +36,12 @@ module Llm
         Problem:
         #{problem.problem_statement}
 
-        Use:
-        T = exp(-2*gamma)
-        gamma = (L / hbar) * sqrt(2 * m * (V0 - E))
-        Compute gamma first, then compute T = exp(-2*gamma).
+        Compute each intermediate step explicitly in order:
+        step1_barrier_energy_J = (V0 - E) in joules = 4 * 1.60218e-19
+        step2_sqrt_term = sqrt(2 * m * step1_barrier_energy_J)
+        step3_L_over_hbar = L / hbar
+        step4_gamma = step3_L_over_hbar * step2_sqrt_term
+        tunneling_values[0] = exp(-2 * step4_gamma)
 
         Constants:
         m = 9.10938e-31 kg
@@ -51,7 +53,10 @@ module Llm
 
         Return strictly valid JSON with this shape:
         {
-          "gamma": number,
+          "step1_barrier_energy_J": number,
+          "step2_sqrt_term": number,
+          "step3_L_over_hbar": number,
+          "step4_gamma": number,
           "tunneling_values": [t1]
         }
 
@@ -93,9 +98,9 @@ module Llm
 
       if json_blob
         parsed = JSON.parse(json_blob)
-        gamma = parsed["gamma"]&.to_f
+        step4_gamma = parsed["step4_gamma"]&.to_f
         values = Array(parsed["tunneling_values"]).map(&:to_f)
-        return [values.first(1), gamma] if values.size >= 1
+        return [values.first(1), step4_gamma] if values.size >= 1
       end
 
       numeric_values = response_text.scan(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/).map(&:to_f)
@@ -105,10 +110,10 @@ module Llm
       [numeric_values.first(1), nil]
     end
 
-    def format_raw_response(response_text, gamma_value)
-      return response_text if gamma_value.nil?
+    def format_raw_response(response_text, step4_gamma)
+      return response_text if step4_gamma.nil?
 
-      "gamma=#{gamma_value}\n#{response_text}"
+      "step4_gamma=#{step4_gamma}\n#{response_text}"
     end
   end
 end
