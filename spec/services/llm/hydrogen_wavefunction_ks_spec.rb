@@ -75,11 +75,12 @@ RSpec.describe Llm::HydrogenWavefunctionKs do
     expect(experiment.prompt_strategy).to eq("zero_shot")
   end
 
-  it "stores four parsed values in parsed_answer" do
+  it "stores normalization_integral as one parsed value in parsed_answer" do
     experiment = service.run(problem)
     parsed_answer = JSON.parse(experiment.parsed_answer)
 
-    expect(parsed_answer.size).to eq(4)
+    expect(parsed_answer.size).to eq(1)
+    expect(parsed_answer.first).to be_within(1.0e-9).of(0.9999998)
   end
 
   it "records elapsed_ms" do

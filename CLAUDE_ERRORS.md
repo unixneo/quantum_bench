@@ -302,3 +302,73 @@ responsibility.
 > the new problem, not as a deferred fix later.
 
 ---
+
+## Error 14 -- Hydrogen Wavefunction: Generalization Prompt Did Not Specify LLM Scalar Extraction for normalization_integral
+
+**Date:** 2026-04-07
+
+**Who:** Claude
+
+**What happened**
+The EvaluationKs generalization prompt specified: "Extract the LLM scalar from
+experiment.parsed_answer (first element)." This instruction did not account for
+the hydrogen problem's special case: its LLM KS stores wavefunction_values (four
+values in m^-3/2) in parsed_answer, not normalization_integral.
+
+The prompt should have specified that for hydrogen, parsed_answer must contain
+the normalization_integral as its scalar value, not a wavefunction value. Without
+this instruction, Codex correctly followed the general rule and extracted the
+wrong quantity.
+
+The result: EvaluationKs compared a raw wavefunction value (~4.23e+15 m^-3/2)
+to the benchmark normalization_integral (~1.0) -- a physically meaningless
+comparison guaranteed to produce FAIL with error class wrong_theorem.
+
+**Correct rule going forward**
+> When writing a generalization prompt that covers multiple problems with
+> different return shapes, explicitly specify the scalar extraction rule
+> for each problem that deviates from the general case.
+> Never assume the general rule applies uniformly without checking each
+> problem's LLM KS parsed_answer structure.
+
+---
+
+## Error 15 -- False PASS: EvaluationKs Uses Global Threshold Instead of Per-Problem Tolerance
+
+**Date:** 2026-04-07
+
+**Who:** Claude (architectural gap in generalization prompt)
+
+**What happened**
+EvaluationKs uses a hardcoded global PASS_THRESHOLD = 1.0e-6 for all problems.
+The WKB tunneling problem has a per-problem tunneling_tolerance of 1.0e-12
+defined in its seed input_parameters.
+
+The LLM returned T = 3.35e-18 against a benchmark of 1.259e-09 -- a difference
+of 9 orders of magnitude. The absolute error is 1.259e-09, which is less than
+the global threshold 1.0e-6, so EvaluationKs recorded PASS.
+
+This is a false PASS. The result is catastrophically wrong and should be FAIL
+with error class wrong_theorem. The per-problem tolerance (1.0e-12) would have
+correctly flagged this as a failure.
+
+**Root cause**
+The generalization prompt for EvaluationKs did not instruct Codex to read the
+per-problem tolerance from input_parameters and use it instead of the global
+threshold. Each problem already defines its own tolerance in seeds.rb:
+- normalization_tolerance: 1.0e-6 (hydrogen)
+- oscillation_tolerance: 1.0e-6 (Rabi oscillations)
+- frequency_tolerance: 1.0e-6 (Rabi frequency)
+- tunneling_tolerance: 1.0e-12 (WKB tunneling)
+- perturbation_tolerance: 1.0e-12 (perturbation theory)
+
+**Correct fix**
+EvaluationKs must read the tolerance key from the problem's input_parameters
+for each problem and use it as the pass threshold instead of the global constant.
+
+**Correct rule going forward**
+> EvaluationKs must never use a global tolerance. Per-problem tolerance keys
+> are defined in input_parameters and must be read at evaluation time.
+> The generalization prompt must explicitly specify this requirement.
+
+---

@@ -13,7 +13,7 @@ module Llm
       response_text = request_completion(build_prompt(problem), model_version)
       elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time) * 1000).round
 
-      parsed_values = parse_wavefunction_values(response_text)
+      parsed_values = parse_hydrogen_response(response_text)
 
       Experiment.create!(
         problem: problem,
@@ -80,20 +80,21 @@ module Llm
       blocks.select { |b| b["type"] == "text" }.map { |b| b["text"] }.join("\n")
     end
 
-    def parse_wavefunction_values(response_text)
+    def parse_hydrogen_response(response_text)
       json_blob = response_text[/\{.*\}/m]
 
       if json_blob
         parsed = JSON.parse(json_blob)
-        values = Array(parsed["wavefunction_values"]).map(&:to_f)
-        return values.first(4) if values.size >= 4
+        if parsed.key?("normalization_integral")
+          return [parsed["normalization_integral"].to_f]
+        end
       end
 
       numeric_values = response_text.scan(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/).map(&:to_f)
-      numeric_values.first(4)
+      [numeric_values.last.to_f]
     rescue JSON::ParserError
       numeric_values = response_text.scan(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/).map(&:to_f)
-      numeric_values.first(4)
+      [numeric_values.last.to_f]
     end
   end
 end
