@@ -251,3 +251,54 @@ and what the spec count is. This was not done in the new chat session.
 > - Next action
 
 ---
+
+## Error 12 -- Excessive Context Consumption: Blackboard View Read Caused Session Limit
+
+**Date:** 2026-04-07
+
+**What happened**
+When restyling the quantum_bench dashboard to match the blackboard dark theme,
+Claude read the full blackboard dashboard view (962 lines) and the full blackboard
+layout file (879 lines) in a single turn. This consumed a large block of context
+and contributed directly to hitting the 90% session token limit before the
+experiment runner work (generalizing EvaluationKs, running all 5 problems) could
+be completed.
+
+**What should have happened**
+The CSS variables and card/table rules needed for the restyle are self-contained
+in the <style> block of the blackboard layout. Claude should have read only that
+file and extracted only the <style> block. Reading the 962-line dashboard view
+was unnecessary for the restyle task -- the dashboard view was not being copied,
+only the theme CSS.
+
+**Correct rule going forward**
+> Before reading a reference file for styling or theming, identify exactly
+> which section is needed. Read only that section, not the full file.
+> For theme extraction, the layout file's <style> block is sufficient.
+> Never read a full view file when only CSS variables and class rules are needed.
+
+---
+
+## Error 13 -- Architectural Gap: EvaluationKs Not Generalized During Gate 6
+
+**Date:** 2026-04-07
+
+**What happened**
+EvaluationKs was implemented in Gate 5 for the hydrogen wavefunction problem only.
+When Gate 6 added Problems 2-5, Claude wrote Codex prompts for each new problem's
+seed, benchmark KS, and LLM KS -- but never included a prompt to generalize
+EvaluationKs to handle the new domains and problem names. The result: all 5
+problems show N/A on the dashboard because EvaluationKs cannot dispatch to the
+correct benchmark KS for Problems 2-5.
+
+This is a Claude architectural oversight, not a Codex coding error. Codex correctly
+implemented what each Gate 6 prompt asked for. The missing instruction was Claude's
+responsibility.
+
+**Correct rule going forward**
+> When adding new problems or extending a pipeline, explicitly check whether
+> any existing KS or service is hardcoded to a single case and must be
+> generalized. Include the generalization in the same Codex prompt batch as
+> the new problem, not as a deferred fix later.
+
+---

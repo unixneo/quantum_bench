@@ -8,6 +8,10 @@ RSpec.describe EvaluationKs do
   let(:problem) do
     FactoryBot.create(
       :problem,
+      name: "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0",
+      domain: "wavefunction",
+      tier: 2,
+      problem_statement: "Compute R_21(r)",
       input_parameters: {
         r_values: [1.0, 2.0, 4.0, 6.0],
         normalization_tolerance: 1.0e-6

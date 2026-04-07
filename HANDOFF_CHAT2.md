@@ -67,7 +67,7 @@ Workflow: Claude (architect, prompt designer) + Codex (coder only)
 - [x] Gate 6 Problem 3: Two-level system Rabi frequency, 10 specs passing
 - [x] Gate 6 Problem 4: WKB tunneling probability
 - [x] Gate 6 Problem 5: First order perturbation theory energy correction
-- [x] Gate 7: Results dashboard
+- [x] Gate 7: Results dashboard (dark theme, card layout, blackboard style)
 
 ---
 
@@ -132,7 +132,24 @@ Deviation from this format is documented as Error 9 in CLAUDE_ERRORS.md.
 
 ## Next Action
 
-Gate 6 Problem 4: WKB tunneling probability.
+Generalize EvaluationKs and run all 5 experiments.
+
+EvaluationKs is currently hardcoded to hydrogen wavefunction only.
+It must be generalized to dispatch by problem name (not domain -- two problems
+share domain "spin"). A rake task experiment:run_all must run all 5 LLM KS
+calls and EvaluationKs calls and print results. Dashboard should then show
+real benchmark vs LLM values instead of N/A.
+
+Key facts for the new chat:
+- Dispatch must be by problem name, not domain
+- Problems 2 and 3 both have domain "spin" -- names are unique
+- Each benchmark KS returns a different hash shape; extract first :value entry
+  except hydrogen which uses :normalization_integral
+- LLM scalar is first element of JSON array in experiment.parsed_answer
+- Do not change Evaluation.create! or ErrorLog.create! signatures
+- Reference: app/services/evaluation_ks.rb and all 5 benchmark/llm KS files
+
+Codex prompt for next session is ready -- see CHAT3_CODEX_PROMPT.md
 Physics: transmission coefficient T = exp(-2*gamma) where gamma is the barrier integral.
 Source: Griffiths Section 9.3.
 domain "tunneling", tier 2.

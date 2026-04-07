@@ -4,21 +4,51 @@ class EvaluationKs
   PASS_THRESHOLD = 1.0e-6
   ARITHMETIC_THRESHOLD = 1.0e-3
 
+  DISPATCH_TABLE = {
+    "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0" => {
+      benchmark: Benchmark::HydrogenWavefunctionKs,
+      llm: Llm::HydrogenWavefunctionKs
+    },
+    "Spin-1/2 Rabi Oscillations" => {
+      benchmark: Benchmark::RabiOscillationKs,
+      llm: Llm::RabiOscillationKs
+    },
+    "Two-level System Generalized Rabi Frequency" => {
+      benchmark: Benchmark::RabiFrequencyKs,
+      llm: Llm::RabiFrequencyKs
+    },
+    "WKB Tunneling Probability Through Rectangular Barrier" => {
+      benchmark: Benchmark::WkbTunnelingKs,
+      llm: Llm::WkbTunnelingKs
+    },
+    "First Order Perturbation Energy Correction in 1D Box" => {
+      benchmark: Benchmark::PerturbationEnergyKs,
+      llm: Llm::PerturbationEnergyKs
+    }
+  }.freeze
+
+  def self.dispatch_for(problem_name)
+    DISPATCH_TABLE[problem_name]
+  end
+
   def run(experiment)
     problem = experiment.problem
-    benchmark_result = Benchmark::HydrogenWavefunctionKs.new.run(problem)
+    dispatch = self.class.dispatch_for(problem.name)
+    raise "No dispatch mapping for problem: #{problem.name}" if dispatch.nil?
 
-    benchmark_values = extract_benchmark_values(benchmark_result.fetch(:wavefunction_values))
-    llm_values = JSON.parse(experiment.parsed_answer).map(&:to_f)
+    benchmark_result = dispatch.fetch(:benchmark).new.run(problem)
 
-    absolute_error = mean_absolute_error(benchmark_values, llm_values)
+    benchmark_value = extract_benchmark_scalar(problem.name, benchmark_result)
+    llm_value = extract_llm_scalar(experiment.parsed_answer)
+
+    absolute_error = (benchmark_value - llm_value).abs
     passed = absolute_error < PASS_THRESHOLD
     error_class = classify_error(absolute_error, passed)
 
     evaluation = Evaluation.create!(
       experiment: experiment,
-      benchmark_value: benchmark_result.fetch(:normalization_integral).to_f,
-      llm_value: mean(llm_values),
+      benchmark_value: benchmark_value,
+      llm_value: llm_value,
       absolute_error: absolute_error,
       passed: passed,
       error_class: error_class
@@ -31,22 +61,22 @@ class EvaluationKs
 
   private
 
-  def extract_benchmark_values(values)
-    values.map do |entry|
-      if entry.is_a?(Hash)
-        (entry[:value] || entry["value"]).to_f
-      else
-        entry.to_f
-      end
+  def extract_benchmark_scalar(problem_name, benchmark_result)
+    return benchmark_result.fetch(:normalization_integral).to_f if problem_name == "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0"
+
+    values_key = benchmark_result.keys.find { |key| key.to_s.end_with?("_values") }
+    values = Array(benchmark_result[values_key])
+    first_entry = values.first
+
+    if first_entry.is_a?(Hash)
+      (first_entry[:value] || first_entry["value"]).to_f
+    else
+      first_entry.to_f
     end
   end
 
-  def mean_absolute_error(benchmark_values, llm_values)
-    pairs = benchmark_values.zip(llm_values).compact
-    return Float::INFINITY if pairs.empty?
-
-    total = pairs.sum { |benchmark_value, llm_value| (benchmark_value.to_f - llm_value.to_f).abs }
-    total / pairs.length
+  def extract_llm_scalar(parsed_answer)
+    Array(JSON.parse(parsed_answer)).first.to_f
   end
 
   def classify_error(absolute_error, passed)
@@ -64,11 +94,5 @@ class EvaluationKs
       llm_provider: experiment.llm_provider,
       model_version: experiment.model_version
     )
-  end
-
-  def mean(values)
-    return 0.0 if values.empty?
-
-    values.sum / values.length.to_f
   end
 end
