@@ -46,6 +46,7 @@ class EvaluationKs
     error_class = classify_error(absolute_error, passed)
 
     evaluation = Evaluation.create!(
+      problem: problem,
       benchmark_value: benchmark_value,
       llm_value: expected_value,
       absolute_error: absolute_error,

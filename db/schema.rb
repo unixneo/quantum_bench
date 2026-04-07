@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_07_141000) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_07_212000) do
   create_table "error_logs", force: :cascade do |t|
     t.integer "evaluation_id", null: false
     t.string "error_code"
@@ -32,7 +32,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_07_141000) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "problem_id"
     t.index ["experiment_id"], name: "index_evaluations_on_experiment_id"
+    t.index ["problem_id"], name: "index_evaluations_on_problem_id"
   end
 
   create_table "experiments", force: :cascade do |t|
@@ -62,5 +64,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_07_141000) do
 
   add_foreign_key "error_logs", "evaluations"
   add_foreign_key "evaluations", "experiments"
+  add_foreign_key "evaluations", "problems"
   add_foreign_key "experiments", "problems"
 end

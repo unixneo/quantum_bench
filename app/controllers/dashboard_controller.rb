@@ -2,11 +2,10 @@
 
 class DashboardController < ApplicationController
   def index
-    @problems = Problem.includes(experiments: :evaluations).order(:id)
+    @problems = Problem.includes(:evaluations).order(:id)
 
     @rows = @problems.map do |problem|
-      experiment = problem.experiments.max_by(&:created_at)
-      evaluation = experiment&.evaluations&.max_by(&:created_at)
+      evaluation = problem.evaluations.max_by(&:created_at)
 
       {
         problem: problem,
