@@ -52,6 +52,26 @@ Limited to sources relevant to:
 
 ---
 
-## 3. LLM Experiment References
+## 3. Prior Work in This Series
+
+### protein_variants
+
+**Use in project**
+- Direct predecessor to quantum_bench
+- Source of blackboard/KS architecture pattern
+- Source of multi-agent workflow design (Claude architect, Codex coder)
+- Source of gate-based confirmation methodology
+- Source of .md documentation structure (DESIGN, CLAUDE_ERRORS, CHATGPT_ERRORS, TODO, PAPER)
+- protein_variants project files were reviewed directly before starting quantum_bench
+
+**References**
+- GitHub: https://github.com/unixneo/protein_variants
+- Code DOI: https://doi.org/10.5281/zenodo.19436320
+- Paper DOI: https://doi.org/10.5281/zenodo.19438177
+- ResearchGate: https://www.researchgate.net/publication/403537592_A_Deterministic_Blackboard_Knowledge_Source_Engine_for_Protein_Missense_Variant_Interpretation_A_Controlled_Experiment_in_LLM-_Assisted_Scientific_Software_Development
+
+---
+
+## 4. LLM Experiment References
 
 <!-- To be populated as experiment proceeds -->

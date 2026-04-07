@@ -134,6 +134,15 @@ This system does NOT aim to:
 - Codebase complexity must genuinely stress the multi-agent workflow
 - The derivation chain matters as much as the final answer
 
+**protein_variants reference implementation:**
+- GitHub: https://github.com/unixneo/protein_variants
+- DOI: https://doi.org/10.5281/zenodo.19436320
+
+The quantum_bench architecture, .md documentation structure, blackboard/KS design
+pattern, multi-agent workflow (Claude architect, Codex coder), gate-based confirmation
+process, and error taxonomy methodology were all directly informed by reviewing the
+protein_variants project files prior to starting this project.
+
 ### Applied here
 - Benchmark is pure Ruby, deterministic, self-contained
 - Problems chosen for derivation complexity, not lookup complexity
@@ -155,3 +164,26 @@ No production deployment target.
 - Claude: architect, prompt designer, error analyst
 - Codex: coder only -- no domain decisions, no architectural changes
 - Human (Tim): systems architect, experiment director, final evaluator
+
+### 11.1 Claude Does Not Review Codex Code
+
+Claude does not inspect, review, or critique Ruby implementation code written by Codex.
+Code review by Claude violates role separation and introduces subjective judgment where
+the experiment design calls for objective numerical comparison.
+
+The only reviewer is the math:
+- If rspec passes and numerical output matches the benchmark within tolerance, the code is correct
+- If rspec fails, Codex fixes it
+- If numerical output diverges from benchmark, that is a documented error
+
+Claude reviewing Codex code is Claude doing Codex's job. This is prohibited.
+
+### 11.2 The Math is the Reviewer
+
+Every LLM KS implementation is evaluated solely by:
+- rspec pass/fail
+- Numerical comparison against the benchmark KS output
+- Tolerance threshold defined per problem
+
+No subjective code inspection. No Claude judgment on implementation style or approach.
+The benchmark either confirms or rejects the output. That result is documented.
