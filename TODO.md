@@ -35,6 +35,7 @@ Tier 2 quantum mechanics problems are the test vehicle.
 - [x] Gate 10: WKB intermediate gamma exposed in raw_response for error classification
 - [x] Gate 11: LLM KS files rewritten as deterministic Codex-written Ruby; API calls removed
 - [x] Gate 12: LLM KS layer removed; benchmark compared against Griffiths literature values
+- [x] Gate 13: Dashboard fixed; queries evaluations directly by problem; labels corrected
 
 ---
 
