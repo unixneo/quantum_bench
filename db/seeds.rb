@@ -27,3 +27,26 @@ Problem.find_or_create_by(name: "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0")
   OUTPUT
   p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Table 4.7"
 end
+
+Problem.find_or_create_by(name: "Spin-1/2 Rabi Oscillations") do |p|
+  p.domain = "spin"
+  p.tier = 2
+  p.problem_statement = <<~STATEMENT
+    Compute the transition probability for spin-1/2 Rabi oscillations:
+    P(t) = sin^2(omega_1 * t / 2).
+
+    Evaluate P(t) at t = 0, T/4, T/2, 3T/4, and T where
+    T = 2*pi/omega_1 and omega_1 = 1.0e6 rad/s.
+  STATEMENT
+  p.input_parameters = JSON.generate({
+    omega_1: 1.0e6,
+    t_values: [0.0, 0.25, 0.5, 0.75, 1.0],
+    t_units: "multiples of T",
+    oscillation_tolerance: 1.0e-6
+  })
+  p.expected_output_description = <<~OUTPUT
+    Five values of P(t) evaluated at t = 0, T/4, T/2, 3T/4, T.
+    Expected sequence is [0.0, 0.5, 1.0, 0.5, 0.0] within tolerance.
+  OUTPUT
+  p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 4.3"
+end

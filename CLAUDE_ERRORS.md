@@ -74,3 +74,77 @@ only referenced the docs update. The Gate 4 work was not mentioned.
 > ensure all changed files are accounted for in the message.
 
 ---
+
+## Error 4 — Context Drift: Questioned Commit Status Already Confirmed by User
+
+**Date:** 2026-04-07
+
+**What happened**
+After the user posted the full git output confirming a successful commit and push,
+Claude asked whether everything was committed before starting a new chat. The commit
+status had already been explicitly confirmed in the immediately preceding message.
+
+**Correct rule going forward**
+> Never question the status of an action the user has already confirmed with
+> explicit output. Read and trust the output the user provides.
+
+---
+
+## Error 5 — Stale TODO.md Not Updated After Each Gate
+
+**Date:** 2026-04-07
+
+**What happened**
+TODO.md was not updated to mark Gates 2-5 as complete after each gate was confirmed.
+The new chat instance caught this and flagged it correctly, but it should not have
+been stale in the first place.
+
+**Correct rule going forward**
+> Update TODO.md gate checkboxes immediately after each gate is confirmed,
+> before the commit for that gate.
+
+---
+
+## Error 6 — Role Violation: Claude Wrote Seed Data and Implementation Details in Codex Prompt
+
+**Date:** 2026-04-07
+
+**What happened**
+The Gate 6 Codex prompt for Problem 2 included fully written seed data, 
+implementation details, and method specifications written by Claude rather 
+than instructing Codex to implement them. Claude wrote the Ruby seed content 
+and service method logic directly inside the prompt.
+
+**Correct rule going forward**
+> Codex prompts must describe WHAT to build, not write the code itself.
+> Specify requirements, patterns to follow, and references to existing files.
+> Never include Ruby code blocks in Codex prompts.
+
+---
+
+## Error 7 — Context Loss When Switching to New Chat
+
+**Date:** 2026-04-07
+
+**What happened**
+When token usage reached 43%, Claude recommended starting a new chat and provided
+a context prompt to carry forward. The new chat instance read the project files
+but still lost significant working context:
+- Did not maintain the strict Claude-as-architect/Codex-as-coder role separation
+- Generated Ruby seed code directly in the Codex prompt (Error 6)
+- Flagged TODO.md as stale rather than fixing it immediately (partial catch)
+- Required correction and return to the original chat session
+
+**Finding**
+Switching chat sessions mid-project causes context degradation even with a
+handoff prompt. The new instance reads files but does not fully internalize
+the working discipline established over the session history.
+
+**Correct rule going forward**
+> Do not recommend switching chat sessions mid-project unless token exhaustion
+> is imminent. The working discipline built up in a session is not fully
+> transferable via file-based context alone.
+> If a new chat is unavoidable, the handoff prompt must explicitly restate
+> all workflow rules and known errors by number.
+
+---

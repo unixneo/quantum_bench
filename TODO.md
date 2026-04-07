@@ -24,11 +24,11 @@ Tier 2 quantum mechanics problems are the test vehicle.
 ## Gates
 
 - [x] Gate 1: Rails scaffold, models, migrations, specs (15 examples, 0 failures)
-- [ ] Gate 2: First problem seeded
-- [ ] Gate 3: Benchmark KS implemented for first problem
-- [ ] Gate 4: LLM KS implemented for first problem
-- [ ] Gate 5: Evaluation loop closes for first problem
-- [ ] Gate 6: Second and third problems
+- [x] Gate 2: First problem seeded (Hydrogen atom radial wavefunction n=2 l=1 m=0)
+- [x] Gate 3: Benchmark KS implemented, 6 specs passing
+- [x] Gate 4: LLM KS implemented, 5 specs passing
+- [x] Gate 5: Evaluation loop closes, 5 specs passing
+- [ ] Gate 6: Problems 2-5 seeded and KS pipeline implemented
 - [ ] Gate 7: Results dashboard
 
 ---
