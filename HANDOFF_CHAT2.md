@@ -68,6 +68,7 @@ Workflow: Claude (architect, prompt designer) + Codex (coder only)
 - [x] Gate 6 Problem 4: WKB tunneling probability
 - [x] Gate 6 Problem 5: First order perturbation theory energy correction
 - [x] Gate 7: Results dashboard (dark theme, card layout, blackboard style)
+- [x] Gate 8: EvaluationKs generalized, experiment:run_all, all 5 experiments executed
 
 ---
 

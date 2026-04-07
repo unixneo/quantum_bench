@@ -30,6 +30,7 @@ Tier 2 quantum mechanics problems are the test vehicle.
 - [x] Gate 5: Evaluation loop closes, 5 specs passing
 - [x] Gate 6: Problems 2-5 seeded and KS pipeline implemented
 - [x] Gate 7: Results dashboard (dark theme, card layout, blackboard style)
+- [x] Gate 8: EvaluationKs generalized, experiment:run_all, all 5 experiments executed
 
 ---
 
