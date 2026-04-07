@@ -170,3 +170,44 @@ The correct action at this point was to:
 > Never mix a commit step inside a Codex prompt when a handoff is pending.
 
 ---
+
+## Error 9 -- Codex Prompt Format Lost After New Chat Handoff
+
+**Date:** 2026-04-07
+
+**What happened**
+After the session handoff to a new chat, Claude generated Codex prompts in an
+incorrect format. Two successive attempts were wrong:
+
+- First attempt: used markdown headers, bold text, and nested bullet sections
+  (structured like a Claude response, not a Codex prompt)
+- Second attempt after user asked for "a proper prompt": switched to flowing
+  prose paragraphs with no structure
+
+Neither matched the established format from the prior session. The user had to
+provide a screenshot of a correct prior-session prompt to demonstrate the
+expected format.
+
+**Correct Codex prompt format**
+Plain text inside a code block. Structure is:
+
+  - Role header: two lines stating working directory and role
+  - STEP N labels for each discrete task
+  - Reference list of existing files to follow as patterns
+  - Physics or domain specification inline under the relevant step
+  - Explicit shell commands (rails db:seed, rspec, git) included in the prompt
+  - No markdown, no bold, no bullet nesting, no prose paragraphs
+
+**Root cause**
+The Codex prompt format was established iteratively during the prior session and
+was never documented in a project file. HANDOFF_CHAT2.md described the workflow
+rules but did not include a prompt format example or reference. The new chat
+instance had no format anchor and defaulted to its own formatting patterns.
+
+**Correct rule going forward**
+> HANDOFF_CHAT2.md must include a concrete Codex prompt format example.
+> Before writing any Codex prompt in a new session, read that example and
+> match it exactly: plain text code block, role header, STEP labels, inline
+> physics, explicit shell commands, no markdown formatting.
+
+---

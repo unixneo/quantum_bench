@@ -86,3 +86,36 @@ Problem.find_or_create_by(name: "Two-level System Generalized Rabi Frequency") d
   OUTPUT
   p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 4.3; Cohen-Tannoudji, Quantum Mechanics, Vol. 1"
 end
+
+Problem.find_or_create_by(name: "WKB Tunneling Probability Through Rectangular Barrier") do |p|
+  p.domain = "tunneling"
+  p.tier = 2
+  p.problem_statement = <<~STATEMENT
+    Compute the WKB transmission coefficient for a rectangular barrier:
+    T = exp(-2*gamma)
+    gamma = (L / hbar) * sqrt(2 * m * (V0 - E))
+
+    Use:
+    m = 9.10938e-31 kg
+    hbar = 1.05457e-34 J*s
+    V0 = 5 eV
+    E = 1 eV
+    L = 1.0e-9 m
+    1 eV = 1.60218e-19 J
+  STATEMENT
+  p.input_parameters = JSON.generate({
+    m: 9.10938e-31,
+    hbar: 1.05457e-34,
+    v0_eV: 5.0,
+    e_eV: 1.0,
+    l: 1.0e-9,
+    ev_to_j: 1.60218e-19,
+    expected_value: 1.2592852200516956e-09,
+    tunneling_tolerance: 1.0e-12
+  })
+  p.expected_output_description = <<~OUTPUT
+    One WKB transmission coefficient T computed from the provided constants.
+    Value must match T = exp(-2*gamma) within tolerance.
+  OUTPUT
+  p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 9.3"
+end
