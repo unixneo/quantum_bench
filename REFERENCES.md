@@ -52,7 +52,23 @@ Limited to sources relevant to:
 
 ---
 
-## 3. Prior Work in This Series
+## 3. Blackboard Architecture Reference
+
+### Bass (2026) — Deterministic Blackboard Pipelines with Specialized LLM Knowledge Sources
+
+**Use in project**
+- Foundational architecture reference for the blackboard/KS design used in quantum_bench
+- Defines the Deterministic LLM Blackboard Pipeline (DLBP) pattern
+- Establishes the role of specialized LLM Knowledge Sources within deterministic pipelines
+
+**Reference**
+- Bass, T. (2026). *Deterministic Blackboard Pipelines with Specialized LLM Knowledge Sources:
+  A Generalizable Architecture for Intelligent Multi-Stage Reasoning*. Zenodo.
+  https://doi.org/10.5281/zenodo.19068475
+
+---
+
+## 4. Prior Work in This Series
 
 ### protein_variants
 

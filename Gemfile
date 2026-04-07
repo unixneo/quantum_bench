@@ -15,6 +15,7 @@ gem "numo-narray"
 group :development, :test do
   gem "debug"
   gem "rspec-rails"
+  gem "factory_bot_rails"
   gem "brakeman"
   gem "rubocop-rails-omakase"
 end

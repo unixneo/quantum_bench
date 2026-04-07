@@ -54,3 +54,23 @@ not check that directory.
 > that information does not exist.
 
 ---
+
+## Error 3 — Incomplete Commit Message: Gate 4 Files Not Referenced
+
+**Date:** 2026-04-07
+
+**What happened**
+The Gate 4 commit included LLM KS service and spec files
+(app/services/llm/hydrogen_wavefunction_ks.rb,
+spec/services/llm/hydrogen_wavefunction_ks_spec.rb) but the commit message
+only referenced the docs update. The Gate 4 work was not mentioned.
+
+**Correct commit message should have been:**
+> Gate 4: LLM KS for hydrogen wavefunction, 5 specs passing; docs: role separation, prior work references, CLAUDE_ERRORS
+
+**Correct rule going forward**
+> Commit messages must reference all significant changes in the commit.
+> Always check git status output before writing the commit message and
+> ensure all changed files are accounted for in the message.
+
+---
