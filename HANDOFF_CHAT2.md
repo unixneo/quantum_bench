@@ -28,6 +28,7 @@ RULE 7: Check all project directories before concluding information does not exi
 RULE 8: Never question the status of an action the user has already confirmed.
 RULE 9: Do not recommend switching chat sessions unless token exhaustion is imminent.
 RULE 10: Codex prompts reference existing files as patterns -- never write the code.
+RULE 11: Every Codex prompt must be inside a plain text code block for direct copy-paste. Consistent format across all prompts. No exceptions.
 
 ---
 
@@ -63,7 +64,7 @@ Workflow: Claude (architect, prompt designer) + Codex (coder only)
 - [x] Gate 5: Evaluation loop closes, 5 specs passing
 - [x] Gate 6 Problem 2: Rabi oscillations, 10 specs passing
 - [x] Gate 6 Problem 3: Two-level system Rabi frequency, 10 specs passing
-- [ ] Gate 6 Problem 4: WKB tunneling probability
+- [x] Gate 6 Problem 4: WKB tunneling probability
 - [ ] Gate 6 Problem 5: First order perturbation theory energy correction
 - [ ] Gate 7: Results dashboard
 
@@ -74,7 +75,7 @@ Workflow: Claude (architect, prompt designer) + Codex (coder only)
 - [x] Problem 1: Hydrogen atom radial wavefunction (n=2, l=1, m=0)
 - [x] Problem 2: Spin-1/2 Rabi oscillations
 - [x] Problem 3: Two-level system Rabi frequency
-- [ ] Problem 4: WKB tunneling probability
+- [x] Problem 4: WKB tunneling probability
 - [ ] Problem 5: First order perturbation theory energy correction
 
 ---
@@ -93,6 +94,38 @@ Reference files for pattern:
 - app/services/llm/rabi_frequency_ks.rb
 - spec/services/benchmark/rabi_frequency_ks_spec.rb
 - spec/services/llm/rabi_frequency_ks_spec.rb
+
+---
+
+## Codex Prompt Format -- Read This Before Writing Any Prompt
+
+All Codex prompts must follow this exact format. Plain text inside a code block.
+No markdown, no bold, no bullet nesting, no prose paragraphs.
+
+```
+You are working in /Users/timbass/rails/quantum_bench.
+You are the coder. Do not make architecture decisions.
+
+STEP 1 -- <short description of task>.
+
+Reference existing implementations:
+- <file path>
+- <file path>
+
+1. <instruction with inline physics or domain spec as needed>
+   Run <shell command> and confirm <expected output>.
+
+2. <next instruction>
+   Run <shell command> and confirm <expected output>.
+
+3. Commit and push:
+   git add -A
+   git commit -m "<message referencing all significant changes>"
+   git push origin main
+```
+
+This format was established in the prior session and must be preserved across handoffs.
+Deviation from this format is documented as Error 9 in CLAUDE_ERRORS.md.
 
 ---
 

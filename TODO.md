@@ -38,5 +38,5 @@ Tier 2 quantum mechanics problems are the test vehicle.
 - [ ] Problem 1: Hydrogen atom radial wavefunction (n=2, l=1, m=0)
 - [ ] Problem 2: Spin-1/2 Rabi oscillations
 - [ ] Problem 3: Two-level system Rabi frequency
-- [ ] Problem 4: WKB tunneling probability
+- [x] Problem 4: WKB tunneling probability
 - [ ] Problem 5: First order perturbation theory energy correction

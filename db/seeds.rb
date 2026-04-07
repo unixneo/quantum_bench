@@ -119,3 +119,32 @@ Problem.find_or_create_by(name: "WKB Tunneling Probability Through Rectangular B
   OUTPUT
   p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 9.3"
 end
+
+Problem.find_or_create_by(name: "First Order Perturbation Energy Correction in 1D Box") do |p|
+  p.domain = "perturbation_theory"
+  p.tier = 2
+  p.problem_statement = <<~STATEMENT
+    Compute the first order energy correction for a particle in a 1D box:
+    E1 = <psi_n|H'|psi_n>
+    with perturbation H' = epsilon * x.
+
+    For this system, E1 = (epsilon * L) / 2 for all n.
+
+    Use:
+    L = 1.0 m
+    epsilon = 0.1 J/m
+    n = 1
+  STATEMENT
+  p.input_parameters = JSON.generate({
+    l: 1.0,
+    epsilon: 0.1,
+    n: 1,
+    expected_value: 0.05,
+    perturbation_tolerance: 1.0e-12
+  })
+  p.expected_output_description = <<~OUTPUT
+    One first order energy correction value E1 for the provided parameters.
+    Value must match E1 = (epsilon * L) / 2 within tolerance.
+  OUTPUT
+  p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 6.1"
+end

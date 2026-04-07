@@ -211,3 +211,23 @@ instance had no format anchor and defaulted to its own formatting patterns.
 > physics, explicit shell commands, no markdown formatting.
 
 ---
+
+## Error 10 -- Codex Prompt Format Not Enforced as Immutable Rule
+
+**Date:** 2026-04-07
+
+**What happened**
+After documenting the correct Codex prompt format in Error 9 and adding a format
+example to HANDOFF_CHAT2.md, the format was still not enforced as an immutable
+workflow rule. Claude was reminded again that all Codex prompts must be presented
+in plain text code blocks for easy copy and paste, with consistent structure across
+every prompt in the project.
+
+**Correct rule going forward**
+> Every Codex prompt must be delivered inside a plain text code block.
+> No exceptions. The code block format enables direct copy-paste into Codex
+> without editing. Inconsistent formatting across prompts is a workflow error.
+> The format defined in HANDOFF_CHAT2.md under "Codex Prompt Format" is the
+> only accepted format.
+
+---
