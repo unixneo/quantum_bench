@@ -1,4 +1,4 @@
-# CHATGPT_ERRORS.md
+# CODEX_ERRORS.md
 
 ## Purpose
 

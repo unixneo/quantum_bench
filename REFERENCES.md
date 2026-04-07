@@ -77,7 +77,7 @@ Limited to sources relevant to:
 - Source of blackboard/KS architecture pattern
 - Source of multi-agent workflow design (Claude architect, Codex coder)
 - Source of gate-based confirmation methodology
-- Source of .md documentation structure (DESIGN, CLAUDE_ERRORS, CHATGPT_ERRORS, TODO, PAPER)
+- Source of .md documentation structure (DESIGN, CLAUDE_ERRORS, CODEX_ERRORS, TODO, PAPER)
 - protein_variants project files were reviewed directly before starting quantum_bench
 
 **References**
