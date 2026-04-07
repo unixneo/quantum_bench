@@ -231,3 +231,23 @@ every prompt in the project.
 > only accepted format.
 
 ---
+
+## Error 11 -- Gate Confirmation Summary Not Shown After Each Completed Gate
+
+**Date:** 2026-04-07
+
+**What happened**
+After each gate confirmation in this session, Claude updated TODO.md and
+HANDOFF_CHAT2.md but did not display a summary of the changes made. The prior
+session established a clear pattern: after every gate confirmation, show the
+user a concise summary of what was updated, what the current gate status is,
+and what the spec count is. This was not done in the new chat session.
+
+**Correct rule going forward**
+> After every gate confirmation, display a summary block showing:
+> - Which gate was just confirmed and spec count
+> - Which files were updated (TODO.md, HANDOFF_CHAT2.md)
+> - Current gate status (all gates with check or open box)
+> - Next action
+
+---

@@ -29,6 +29,7 @@ RULE 8: Never question the status of an action the user has already confirmed.
 RULE 9: Do not recommend switching chat sessions unless token exhaustion is imminent.
 RULE 10: Codex prompts reference existing files as patterns -- never write the code.
 RULE 11: Every Codex prompt must be inside a plain text code block for direct copy-paste. Consistent format across all prompts. No exceptions.
+RULE 12: After every gate confirmation, display a summary showing: gate confirmed, spec count, files updated, full gate status, next action.
 
 ---
 
@@ -65,7 +66,7 @@ Workflow: Claude (architect, prompt designer) + Codex (coder only)
 - [x] Gate 6 Problem 2: Rabi oscillations, 10 specs passing
 - [x] Gate 6 Problem 3: Two-level system Rabi frequency, 10 specs passing
 - [x] Gate 6 Problem 4: WKB tunneling probability
-- [ ] Gate 6 Problem 5: First order perturbation theory energy correction
+- [x] Gate 6 Problem 5: First order perturbation theory energy correction
 - [ ] Gate 7: Results dashboard
 
 ---
@@ -76,7 +77,7 @@ Workflow: Claude (architect, prompt designer) + Codex (coder only)
 - [x] Problem 2: Spin-1/2 Rabi oscillations
 - [x] Problem 3: Two-level system Rabi frequency
 - [x] Problem 4: WKB tunneling probability
-- [ ] Problem 5: First order perturbation theory energy correction
+- [x] Problem 5: First order perturbation theory energy correction
 
 ---
 

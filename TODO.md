@@ -28,7 +28,7 @@ Tier 2 quantum mechanics problems are the test vehicle.
 - [x] Gate 3: Benchmark KS implemented, 6 specs passing
 - [x] Gate 4: LLM KS implemented, 5 specs passing
 - [x] Gate 5: Evaluation loop closes, 5 specs passing
-- [ ] Gate 6: Problems 2-5 seeded and KS pipeline implemented
+- [x] Gate 6: Problems 2-5 seeded and KS pipeline implemented
 - [ ] Gate 7: Results dashboard
 
 ---
@@ -39,4 +39,4 @@ Tier 2 quantum mechanics problems are the test vehicle.
 - [ ] Problem 2: Spin-1/2 Rabi oscillations
 - [ ] Problem 3: Two-level system Rabi frequency
 - [x] Problem 4: WKB tunneling probability
-- [ ] Problem 5: First order perturbation theory energy correction
+- [x] Problem 5: First order perturbation theory energy correction

@@ -1,0 +1,32 @@
+<div style="font-family: Arial, sans-serif; margin: 24px;">
+  <h1 style="margin-bottom: 16px;">Quantum Bench Results Dashboard</h1>
+
+  <table style="border-collapse: collapse; width: 100%;">
+    <thead>
+      <tr>
+        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Problem Name</th>
+        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Domain</th>
+        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Tier</th>
+        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Benchmark Value</th>
+        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">LLM Value</th>
+        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Absolute Error</th>
+        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Pass/Fail</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @rows.each do |row| %>
+        <tr>
+          <td style="border: 1px solid #ccc; padding: 8px;"><%= row[:problem].name %></td>
+          <td style="border: 1px solid #ccc; padding: 8px;"><%= row[:problem].domain %></td>
+          <td style="border: 1px solid #ccc; padding: 8px;"><%= row[:problem].tier %></td>
+          <td style="border: 1px solid #ccc; padding: 8px;"><%= row[:benchmark_value].nil? ? "N/A" : row[:benchmark_value] %></td>
+          <td style="border: 1px solid #ccc; padding: 8px;"><%= row[:llm_value].nil? ? "N/A" : row[:llm_value] %></td>
+          <td style="border: 1px solid #ccc; padding: 8px;"><%= row[:absolute_error].nil? ? "N/A" : row[:absolute_error] %></td>
+          <td style="border: 1px solid #ccc; padding: 8px; font-weight: bold; color: <%= row[:passed] == true ? "#0a7f2e" : "#b00020" %>;">
+            <%= row[:passed].nil? ? "N/A" : (row[:passed] ? "PASS" : "FAIL") %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
