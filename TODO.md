@@ -1,0 +1,42 @@
+# TODO
+
+## Primary Goal
+
+This project is a controlled experiment in multi-agent LLM-assisted scientific
+software development.
+
+**Central question:** Can Claude (architect) and Codex (coder) produce correct
+numerical implementations of applied quantum mechanics problems that agree with
+pure Ruby benchmark computations derived from first principles?
+
+**What this system is:** A deterministic numerical computation engine implementing
+exact analytical solutions to Tier 2 quantum mechanics problems and comparing
+LLM-generated Ruby implementations against pure Ruby benchmarks.
+
+**What this system is not:** A physics simulator. An ML system. A quantum computing
+platform. A production scientific tool.
+
+The LLM experiment is the primary research contribution.
+Tier 2 quantum mechanics problems are the test vehicle.
+
+---
+
+## Gates
+
+- [x] Gate 1: Rails scaffold, models, migrations, specs (15 examples, 0 failures)
+- [ ] Gate 2: First problem seeded
+- [ ] Gate 3: Benchmark KS implemented for first problem
+- [ ] Gate 4: LLM KS implemented for first problem
+- [ ] Gate 5: Evaluation loop closes for first problem
+- [ ] Gate 6: Second and third problems
+- [ ] Gate 7: Results dashboard
+
+---
+
+## Problem Set (Tier 2)
+
+- [ ] Problem 1: Hydrogen atom radial wavefunction (n=2, l=1, m=0)
+- [ ] Problem 2: Spin-1/2 Rabi oscillations
+- [ ] Problem 3: Two-level system Rabi frequency
+- [ ] Problem 4: WKB tunneling probability
+- [ ] Problem 5: First order perturbation theory energy correction
