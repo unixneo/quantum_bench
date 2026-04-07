@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "webmock/rspec"
 
 RSpec.describe Llm::RabiFrequencyKs do
   subject(:service) { described_class.new }
@@ -34,67 +33,28 @@ RSpec.describe Llm::RabiFrequencyKs do
     )
   end
 
-  let(:anthropic_response_text) do
-    {
-      rabi_frequency_values: [
-        1.0e6,
-        1_118_033.988749895,
-        1_414_213.562373095,
-        1_414_213.562373095,
-        2_236_067.97749979
-      ],
-      max_error: 0.0
-    }.to_json
+  it "returns frequency_values" do
+    result = service.run(problem)
+    expect(result[:frequency_values].size).to eq(5)
   end
 
-  before do
-    ENV["ANTHROPIC_API_KEY"] = "test-anthropic-key"
-
-    stub_request(:post, "https://api.anthropic.com/v1/messages")
-      .to_return(
-        status: 200,
-        body: {
-          id: "msg_test",
-          type: "message",
-          role: "assistant",
-          content: [
-            {
-              type: "text",
-              text: anthropic_response_text
-            }
-          ]
-        }.to_json,
-        headers: { "Content-Type" => "application/json" }
-      )
+  it "returns max_error" do
+    result = service.run(problem)
+    expect(result[:max_error]).to be_a(Float)
   end
 
-  it "creates an Experiment record" do
-    expect do
-      service.run(problem)
-    end.to change(Experiment, :count).by(1)
+  it "returns frequency_passed" do
+    result = service.run(problem)
+    expect(result[:frequency_passed]).to eq(true)
   end
 
-  it "sets llm_provider correctly" do
-    experiment = service.run(problem, provider: "claude")
-    expect(experiment.llm_provider).to eq("claude")
+  it "returns tolerance" do
+    result = service.run(problem)
+    expect(result[:tolerance]).to eq(1.0e-6)
   end
 
-  it "sets prompt_strategy correctly" do
-    experiment = service.run(problem, prompt_strategy: "zero_shot")
-    expect(experiment.prompt_strategy).to eq("zero_shot")
-  end
-
-  it "stores five parsed values in parsed_answer" do
-    experiment = service.run(problem)
-    parsed_answer = JSON.parse(experiment.parsed_answer)
-
-    expect(parsed_answer.size).to eq(5)
-  end
-
-  it "records elapsed_ms" do
-    experiment = service.run(problem)
-
-    expect(experiment.elapsed_ms).to be_a(Integer)
-    expect(experiment.elapsed_ms).to be >= 0
+  it "returns benchmark-compatible keys" do
+    result = service.run(problem)
+    expect(result.keys).to include(:frequency_values, :max_error, :frequency_passed, :tolerance)
   end
 end

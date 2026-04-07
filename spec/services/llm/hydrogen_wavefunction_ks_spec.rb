@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "webmock/rspec"
 
 RSpec.describe Llm::HydrogenWavefunctionKs do
   subject(:service) { described_class.new }
@@ -26,67 +25,28 @@ RSpec.describe Llm::HydrogenWavefunctionKs do
     )
   end
 
-  let(:anthropic_response_text) do
-    {
-      wavefunction_values: [
-        1.234e14,
-        1.100e14,
-        7.300e13,
-        3.100e13
-      ],
-      normalization_integral: 0.9999998
-    }.to_json
+  it "returns wavefunction_values" do
+    result = service.run(problem)
+    expect(result[:wavefunction_values].size).to eq(4)
   end
 
-  before do
-    ENV["ANTHROPIC_API_KEY"] = "test-anthropic-key"
-
-    stub_request(:post, "https://api.anthropic.com/v1/messages")
-      .to_return(
-        status: 200,
-        body: {
-          id: "msg_test",
-          type: "message",
-          role: "assistant",
-          content: [
-            {
-              type: "text",
-              text: anthropic_response_text
-            }
-          ]
-        }.to_json,
-        headers: { "Content-Type" => "application/json" }
-      )
+  it "returns normalization_integral" do
+    result = service.run(problem)
+    expect(result[:normalization_integral]).to be_a(Float)
   end
 
-  it "creates an Experiment record" do
-    expect do
-      service.run(problem)
-    end.to change(Experiment, :count).by(1)
+  it "returns normalization_passed" do
+    result = service.run(problem)
+    expect(result[:normalization_passed]).to eq(true)
   end
 
-  it "sets llm_provider correctly" do
-    experiment = service.run(problem, provider: "claude")
-    expect(experiment.llm_provider).to eq("claude")
+  it "returns tolerance" do
+    result = service.run(problem)
+    expect(result[:tolerance]).to eq(1.0e-6)
   end
 
-  it "sets prompt_strategy correctly" do
-    experiment = service.run(problem, prompt_strategy: "zero_shot")
-    expect(experiment.prompt_strategy).to eq("zero_shot")
-  end
-
-  it "stores normalization_integral as one parsed value in parsed_answer" do
-    experiment = service.run(problem)
-    parsed_answer = JSON.parse(experiment.parsed_answer)
-
-    expect(parsed_answer.size).to eq(1)
-    expect(parsed_answer.first).to be_within(1.0e-9).of(0.9999998)
-  end
-
-  it "records elapsed_ms" do
-    experiment = service.run(problem)
-
-    expect(experiment.elapsed_ms).to be_a(Integer)
-    expect(experiment.elapsed_ms).to be >= 0
+  it "returns benchmark-compatible keys" do
+    result = service.run(problem)
+    expect(result.keys).to include(:wavefunction_values, :normalization_integral, :normalization_passed, :tolerance)
   end
 end

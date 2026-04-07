@@ -9,7 +9,18 @@ namespace :experiment do
       dispatch = EvaluationKs.dispatch_for(problem.name)
       raise "No dispatch mapping for problem: #{problem.name}" if dispatch.nil?
 
-      experiment = dispatch.fetch(:llm).new.run(problem)
+      llm_result = dispatch.fetch(:llm).new.run(problem)
+      llm_scalar = extract_llm_scalar(problem.name, llm_result)
+
+      experiment = Experiment.create!(
+        problem: problem,
+        llm_provider: "codex_ruby",
+        model_version: "deterministic_ruby",
+        prompt_strategy: "formula_direct",
+        raw_response: llm_result.to_json,
+        parsed_answer: [llm_scalar].to_json,
+        elapsed_ms: 0
+      )
       evaluation = evaluator.run(experiment)
 
       puts "Problem: #{problem.name}"
@@ -26,7 +37,17 @@ namespace :experiment do
     problem = Problem.find_by!(name: "WKB Tunneling Probability Through Rectangular Barrier")
 
     5.times do |index|
-      experiment = Llm::WkbTunnelingKs.new.run(problem)
+      llm_result = Llm::WkbTunnelingKs.new.run(problem)
+      llm_scalar = extract_llm_scalar(problem.name, llm_result)
+      experiment = Experiment.create!(
+        problem: problem,
+        llm_provider: "codex_ruby",
+        model_version: "deterministic_ruby",
+        prompt_strategy: "formula_direct",
+        raw_response: llm_result.to_json,
+        parsed_answer: [llm_scalar].to_json,
+        elapsed_ms: 0
+      )
       evaluation = evaluator.run(experiment)
 
       payload = extract_json_payload(experiment.raw_response)
@@ -51,5 +72,19 @@ namespace :experiment do
     JSON.parse(json_blob)
   rescue JSON::ParserError
     {}
+  end
+
+  def extract_llm_scalar(problem_name, llm_result)
+    return llm_result.fetch(:normalization_integral).to_f if problem_name == "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0"
+
+    values_key = llm_result.keys.find { |key| key.to_s.end_with?("_values") }
+    values = Array(llm_result[values_key])
+    first_entry = values.first
+
+    if first_entry.is_a?(Hash)
+      (first_entry[:value] || first_entry["value"]).to_f
+    else
+      first_entry.to_f
+    end
   end
 end

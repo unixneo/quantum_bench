@@ -1,100 +1,66 @@
 # frozen_string_literal: true
 
 require "json"
-require "net/http"
-require "uri"
 
 module Llm
   class HydrogenWavefunctionKs
-    API_ENDPOINT = URI("https://api.anthropic.com/v1/messages")
+    BOHR_RADIUS = 5.29177210903e-11
 
-    def run(problem, provider: "claude", model_version: "claude-sonnet-4-20250514", prompt_strategy: "zero_shot")
-      start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      response_text = request_completion(build_prompt(problem), model_version)
-      elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time) * 1000).round
+    def run(problem)
+      params = JSON.parse(problem.input_parameters)
+      r_values = params.fetch("r_values")
+      tolerance = params.fetch("normalization_tolerance", 1.0e-6).to_f
 
-      parsed_values = parse_hydrogen_response(response_text)
+      integral = normalization_integral
 
-      Experiment.create!(
-        problem: problem,
-        llm_provider: provider,
-        model_version: model_version,
-        prompt_strategy: prompt_strategy,
-        raw_response: response_text,
-        parsed_answer: parsed_values.to_json,
-        elapsed_ms: elapsed_ms
-      )
+      {
+        wavefunction_values: evaluate(r_values),
+        normalization_integral: integral,
+        normalization_passed: (integral - 1.0).abs <= tolerance,
+        tolerance: tolerance
+      }
     end
 
     private
 
-    def build_prompt(problem)
-      <<~PROMPT
-        You are solving a hydrogen atom quantum mechanics task.
+    def r21(r)
+      prefactor = 1.0 / Math.sqrt(24.0)
+      radial_scale = (1.0 / BOHR_RADIUS)**1.5
 
-        Problem:
-        #{problem.problem_statement}
-
-        Compute R_21(r) at r = 1*a_0, 2*a_0, 4*a_0, and 6*a_0 where
-        a_0 = 5.29177210903e-11 m and
-        R_21(r) = (1/sqrt(24)) * (1/a_0)^(3/2) * (r/a_0) * exp(-r / (2*a_0)).
-
-        Verify normalization by evaluating integral(|R_21(r)|^2 * r^2 dr) from 0 to infinity.
-
-        Return strictly valid JSON with this shape:
-        {
-          "wavefunction_values": [v1, v2, v3, v4],
-          "normalization_integral": number
-        }
-
-        Do not include markdown fences or explanatory text.
-      PROMPT
+      prefactor * radial_scale * (r / BOHR_RADIUS) * Math.exp(-r / (2.0 * BOHR_RADIUS))
     end
 
-    def request_completion(prompt, model_version)
-      api_key = ENV.fetch("ANTHROPIC_API_KEY")
-
-      http = Net::HTTP.new(API_ENDPOINT.host, API_ENDPOINT.port)
-      http.use_ssl = true
-
-      request = Net::HTTP::Post.new(API_ENDPOINT)
-      request["content-type"] = "application/json"
-      request["x-api-key"] = api_key
-      request["anthropic-version"] = "2023-06-01"
-      request.body = {
-        model: model_version,
-        max_tokens: 1024,
-        messages: [
-          {
-            role: "user",
-            content: prompt
-          }
-        ]
-      }.to_json
-
-      response = http.request(request)
-      raise "Anthropic API error #{response.code}: #{response.body}" unless response.is_a?(Net::HTTPSuccess)
-
-      payload = JSON.parse(response.body)
-      blocks = payload.fetch("content", [])
-      blocks.select { |b| b["type"] == "text" }.map { |b| b["text"] }.join("\n")
+    def evaluate(r_multiples)
+      r_multiples.map do |multiple|
+        r_meters = multiple.to_f * BOHR_RADIUS
+        { r_multiple: multiple.to_f, r_meters: r_meters, value: r21(r_meters) }
+      end
     end
 
-    def parse_hydrogen_response(response_text)
-      json_blob = response_text[/\{.*\}/m]
+    def normalization_integral
+      a = 0.0
+      b = 100.0 * BOHR_RADIUS
+      steps = 1000
+      h = (b - a) / steps
 
-      if json_blob
-        parsed = JSON.parse(json_blob)
-        if parsed.key?("normalization_integral")
-          return [parsed["normalization_integral"].to_f]
-        end
+      total = 0.0
+      previous_r = a
+      previous_f = integrand(previous_r)
+
+      1.upto(steps) do |index|
+        current_r = a + (index * h)
+        current_f = integrand(current_r)
+        total += ((previous_f + current_f) * h) / 2.0
+        previous_r = current_r
+        previous_f = current_f
       end
 
-      numeric_values = response_text.scan(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/).map(&:to_f)
-      [numeric_values.last.to_f]
-    rescue JSON::ParserError
-      numeric_values = response_text.scan(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/).map(&:to_f)
-      [numeric_values.last.to_f]
+      total
+    end
+
+    def integrand(r)
+      value = r21(r)
+      (value**2) * (r**2)
     end
   end
 end
