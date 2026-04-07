@@ -11,7 +11,7 @@ normalization_failure, hallucinated_step, wrong_boundary.
 
 ---
 
-## Error 1 -- WKB Tunneling: gamma Doubled, arithmetic_error in Barrier Integral
+## Error 1 -- WKB Tunneling (Preliminary): gamma Doubled with Single-Step Prompt
 
 **Problem:** WKB Tunneling Probability Through Rectangular Barrier
 **Model:** claude-sonnet-4-20250514
@@ -32,12 +32,13 @@ sqrt(2 * m * (V0 - E)) as 2 * sqrt(m * (V0 - E)), which doubles gamma.
 The exponent application T = exp(-2*gamma) was correct -- the error is
 localized to the barrier integral calculation.
 
-**Error class:** arithmetic_error
-**Location in derivation:** barrier integral (gamma step)
+**Note:** This was observed with the initial single-step prompt (no intermediate steps
+required). The subsequent 5-run investigation with a step-by-step prompt produced a
+different error mode. See Errors 2 and 3 below for the definitive classification.
 
 ---
 
-## Error 1 -- WKB Run 1: Hallucinated Intermediate Steps with Wrong Exponents
+## Error 2 -- WKB Run 1: Hallucinated Intermediate Steps with Wrong Exponents
 
 **Date:** 2026-04-07
 **Model:** claude-sonnet-4-20250514
@@ -59,7 +60,7 @@ reported plausible-looking but numerically wrong step2 and step3 values.
 
 ---
 
-## Error 2 -- WKB All 5 Runs: Arithmetic Error in exp() for Large Negative Argument
+## Error 3 -- WKB All 5 Runs: Arithmetic Error in exp() for Large Negative Argument
 
 **Date:** 2026-04-07
 **Model:** claude-sonnet-4-20250514
