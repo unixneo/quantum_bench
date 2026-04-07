@@ -535,3 +535,49 @@ direction.
 > Claude does not invent infrastructure that was not asked for.
 
 ---
+
+## Error 20 -- Critical: Persistent Failure to Follow Stated Experiment Goal Across All Three Projects
+
+**Date:** 2026-04-07
+
+**Who:** Claude (architect)
+
+**Severity:** Critical -- systematic, session-wide instruction failure
+
+**What happened**
+The user stated the experiment design clearly from the beginning and repeated
+it multiple times throughout the session. The design is identical across all
+three projects (stellar_pop, protein_variants, quantum_bench):
+
+  The app computes values in pure Ruby.
+  The computed values are compared against external peer-reviewed literature values.
+  That comparison IS the experiment.
+
+Claude repeatedly substituted this goal with its own interpretations:
+- Substitution 1: LLM KS calls Anthropic API to answer physics questions
+- Substitution 2: LLM KS as deterministic Ruby computing same formula as benchmark
+- Substitution 3: framing as "evaluating whether Codex writes correct Ruby code"
+
+None of these were asked for. All three were corrected by the user. Claude
+substituted again after each correction. This is not a single error -- it is
+a persistent pattern of goal substitution across an entire session despite
+explicit, repeated correction.
+
+The user had to state the correct goal multiple times, reference two prior
+projects by name, and explicitly say "I told you that from the beginning."
+
+**Correct experiment design (immutable -- do not reinterpret):**
+1. The app computes values in pure Ruby (benchmark KS)
+2. Computed values are compared against peer-reviewed literature values
+   stored in seed input_parameters with source citations
+3. EvaluationKs compares computed value against literature value
+4. Pass/fail is determined by tolerance against the literature value
+5. There is no LLM KS layer. The LLM (Codex) is the coding agent only.
+
+**Correct rule going forward**
+> When the user states the experiment goal, write it down verbatim and do
+> not reinterpret it. If uncertain, ask -- do not substitute. If corrected,
+> document the error and ask for explicit confirmation before proceeding.
+> Never reframe a corrected goal as if it were a new insight.
+
+---
