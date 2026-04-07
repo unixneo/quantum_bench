@@ -29,8 +29,8 @@ RSpec.describe Llm::WkbTunnelingKs do
 
   let(:anthropic_response_text) do
     {
-      tunneling_values: [1.2592852200516956e-09],
-      absolute_error: 0.0
+      gamma: 10.24636078131184,
+      tunneling_values: [1.2592852200516956e-09]
     }.to_json
   end
 

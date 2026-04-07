@@ -372,3 +372,38 @@ for each problem and use it as the pass threshold instead of the global constant
 > The generalization prompt must explicitly specify this requirement.
 
 ---
+
+## Error 16 -- WKB Prompt Design: No Intermediate Steps, Error Unclassifiable
+
+**Date:** 2026-04-07
+
+**Who:** Claude (prompt design)
+
+**What happened**
+The WKB LLM KS prompt requests JSON output only with no intermediate steps.
+The LLM returned T = 1.125e-18 (benchmark: 1.259e-09, approximately T^2).
+The LLM also fabricated absolute_error: 1e-21 -- a hallucinated value.
+
+Without intermediate gamma in the response, the exact failure point cannot
+be identified. The LLM either doubled gamma or squared T -- two distinct
+error classes -- but the prompt produces no evidence to distinguish them.
+
+The experiment's purpose is error classification. A prompt that yields an
+unclassifiable arithmetic error is a design failure.
+
+**Correct fix**
+The WKB prompt must require the LLM to show gamma as an intermediate value
+before computing T. The JSON shape should be:
+  { "gamma": number, "tunneling_values": [t], "absolute_error": number }
+If gamma matches the benchmark but T is wrong: error class is arithmetic_error
+in exponent application. If gamma is wrong: error class is arithmetic_error
+in barrier integral. This is the classifiable derivation chain the experiment
+requires.
+
+**Correct rule going forward**
+> LLM KS prompts for physics problems must require intermediate steps in the
+> JSON response, not just the final answer. This enables error classification
+> at the derivation level, which is the primary scientific contribution of
+> this experiment.
+
+---

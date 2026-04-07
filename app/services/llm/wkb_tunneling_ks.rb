@@ -13,14 +13,15 @@ module Llm
       response_text = request_completion(build_prompt(problem), model_version)
       elapsed_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time) * 1000).round
 
-      parsed_values = parse_tunneling_values(response_text)
+      parsed_values, gamma_value = parse_tunneling_values(response_text)
+      stored_raw_response = format_raw_response(response_text, gamma_value)
 
       Experiment.create!(
         problem: problem,
         llm_provider: provider,
         model_version: model_version,
         prompt_strategy: prompt_strategy,
-        raw_response: response_text,
+        raw_response: stored_raw_response,
         parsed_answer: parsed_values.to_json,
         elapsed_ms: elapsed_ms
       )
@@ -38,6 +39,7 @@ module Llm
         Use:
         T = exp(-2*gamma)
         gamma = (L / hbar) * sqrt(2 * m * (V0 - E))
+        Compute gamma first, then compute T = exp(-2*gamma).
 
         Constants:
         m = 9.10938e-31 kg
@@ -49,8 +51,8 @@ module Llm
 
         Return strictly valid JSON with this shape:
         {
-          "tunneling_values": [t1],
-          "absolute_error": number
+          "gamma": number,
+          "tunneling_values": [t1]
         }
 
         Do not include markdown fences or explanatory text.
@@ -91,15 +93,22 @@ module Llm
 
       if json_blob
         parsed = JSON.parse(json_blob)
+        gamma = parsed["gamma"]&.to_f
         values = Array(parsed["tunneling_values"]).map(&:to_f)
-        return values.first(1) if values.size >= 1
+        return [values.first(1), gamma] if values.size >= 1
       end
 
       numeric_values = response_text.scan(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/).map(&:to_f)
-      numeric_values.first(1)
+      [numeric_values.first(1), nil]
     rescue JSON::ParserError
       numeric_values = response_text.scan(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/).map(&:to_f)
-      numeric_values.first(1)
+      [numeric_values.first(1), nil]
+    end
+
+    def format_raw_response(response_text, gamma_value)
+      return response_text if gamma_value.nil?
+
+      "gamma=#{gamma_value}\n#{response_text}"
     end
   end
 end

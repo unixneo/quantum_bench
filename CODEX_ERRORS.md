@@ -41,3 +41,35 @@ sole scalar value in parsed_answer for the hydrogen problem.
 **Error class:** wrong_theorem (unit mismatch / quantity mismatch)
 
 ---
+
+## Error 2 -- WKB LLM Prompt: No Intermediate Steps Requested, Error Unclassifiable
+
+**Date:** 2026-04-07
+
+**Who:** Claude (prompt design)
+
+**What happened**
+The WKB tunneling LLM KS prompt asks the LLM to return JSON only with no
+intermediate steps. The LLM returned T = 1.125e-18 against a benchmark of
+1.259e-09 -- approximately T_correct^2, indicating the LLM either doubled
+gamma or squared the result. Without intermediate steps in the response,
+the exact point of failure cannot be identified from the raw_response.
+
+The experiment's scientific purpose is error classification. A prompt that
+produces an unclassifiable error is a design failure.
+
+Additionally, the LLM fabricated absolute_error: 1e-21 in its JSON response,
+which is a hallucinated value with no relation to the actual error.
+
+**Correct fix**
+The WKB prompt must require the LLM to show:
+1. The computed value of gamma before T
+2. The final value of T
+This produces a classifiable derivation chain: if gamma is wrong, the error
+is in the barrier integral; if gamma is correct but T is wrong, the error
+is in the exponent application.
+
+**Error class:** hallucinated_step (fabricated absolute_error) +
+arithmetic_error (T ≈ T_correct^2, gamma likely doubled)
+
+---
