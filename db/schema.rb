@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_07_084256) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_07_141000) do
   create_table "error_logs", force: :cascade do |t|
     t.integer "evaluation_id", null: false
     t.string "error_code"
@@ -23,7 +23,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_07_084256) do
   end
 
   create_table "evaluations", force: :cascade do |t|
-    t.integer "experiment_id", null: false
+    t.integer "experiment_id"
     t.float "benchmark_value"
     t.float "llm_value"
     t.float "absolute_error"

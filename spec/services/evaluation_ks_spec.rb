@@ -13,7 +13,7 @@ RSpec.describe EvaluationKs do
       tier: 2,
       problem_statement: "Compute R_21(r)",
       input_parameters: {
-        r_values: [1.0, 2.0, 4.0, 6.0],
+        expected_value: 1.0,
         normalization_tolerance: 1.0e-6
       }.to_json
     )
@@ -27,7 +27,6 @@ RSpec.describe EvaluationKs do
 
   describe "#run" do
     it "creates an Evaluation record" do
-      experiment = FactoryBot.create(:experiment, problem: problem, parsed_answer: [1.0, 2.0, 3.0, 4.0].to_json)
       allow(benchmark_service).to receive(:run).and_return(
         {
           wavefunction_values: [1.0, 2.0, 3.0, 4.0],
@@ -36,12 +35,11 @@ RSpec.describe EvaluationKs do
       )
 
       expect do
-        service.run(experiment)
+        service.run(problem)
       end.to change(Evaluation, :count).by(1)
     end
 
     it "sets passed correctly for matching values" do
-      experiment = FactoryBot.create(:experiment, problem: problem, parsed_answer: [1.0, 2.0, 3.0, 4.0].to_json)
       allow(benchmark_service).to receive(:run).and_return(
         {
           wavefunction_values: [1.0, 2.0, 3.0, 4.0],
@@ -49,13 +47,12 @@ RSpec.describe EvaluationKs do
         }
       )
 
-      evaluation = service.run(experiment)
+      evaluation = service.run(problem)
 
       expect(evaluation.passed).to eq(true)
     end
 
     it "sets error_class to correct when values match" do
-      experiment = FactoryBot.create(:experiment, problem: problem, parsed_answer: [1.0, 2.0, 3.0, 4.0].to_json)
       allow(benchmark_service).to receive(:run).and_return(
         {
           wavefunction_values: [1.0, 2.0, 3.0, 4.0],
@@ -63,27 +60,25 @@ RSpec.describe EvaluationKs do
         }
       )
 
-      evaluation = service.run(experiment)
+      evaluation = service.run(problem)
 
       expect(evaluation.error_class).to eq("correct")
     end
 
     it "creates an ErrorLog when passed is false" do
-      experiment = FactoryBot.create(:experiment, problem: problem, parsed_answer: [10.0, 10.0, 10.0, 10.0].to_json)
       allow(benchmark_service).to receive(:run).and_return(
         {
           wavefunction_values: [1.0, 1.0, 1.0, 1.0],
-          normalization_integral: 1.0
+          normalization_integral: 10.0
         }
       )
 
       expect do
-        service.run(experiment)
+        service.run(problem)
       end.to change(ErrorLog, :count).by(1)
     end
 
     it "does not create an ErrorLog when passed is true" do
-      experiment = FactoryBot.create(:experiment, problem: problem, parsed_answer: [1.0, 2.0, 3.0, 4.0].to_json)
       allow(benchmark_service).to receive(:run).and_return(
         {
           wavefunction_values: [1.0, 2.0, 3.0, 4.0],
@@ -92,7 +87,7 @@ RSpec.describe EvaluationKs do
       )
 
       expect do
-        service.run(experiment)
+        service.run(problem)
       end.not_to change(ErrorLog, :count)
     end
   end

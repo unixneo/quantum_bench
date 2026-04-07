@@ -2,34 +2,27 @@
 
 class EvaluationKs
   ARITHMETIC_THRESHOLD = 1.0e-3
-  TOLERANCE_KEY_BY_PROBLEM = {
-    "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0" => "normalization_tolerance",
-    "Spin-1/2 Rabi Oscillations" => "oscillation_tolerance",
-    "Two-level System Generalized Rabi Frequency" => "frequency_tolerance",
-    "WKB Tunneling Probability Through Rectangular Barrier" => "tunneling_tolerance",
-    "First Order Perturbation Energy Correction in 1D Box" => "perturbation_tolerance"
-  }.freeze
 
   DISPATCH_TABLE = {
     "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0" => {
       benchmark: Benchmark::HydrogenWavefunctionKs,
-      llm: Llm::HydrogenWavefunctionKs
+      tolerance_key: "normalization_tolerance"
     },
     "Spin-1/2 Rabi Oscillations" => {
       benchmark: Benchmark::RabiOscillationKs,
-      llm: Llm::RabiOscillationKs
+      tolerance_key: "oscillation_tolerance"
     },
     "Two-level System Generalized Rabi Frequency" => {
       benchmark: Benchmark::RabiFrequencyKs,
-      llm: Llm::RabiFrequencyKs
+      tolerance_key: "frequency_tolerance"
     },
     "WKB Tunneling Probability Through Rectangular Barrier" => {
       benchmark: Benchmark::WkbTunnelingKs,
-      llm: Llm::WkbTunnelingKs
+      tolerance_key: "tunneling_tolerance"
     },
     "First Order Perturbation Energy Correction in 1D Box" => {
       benchmark: Benchmark::PerturbationEnergyKs,
-      llm: Llm::PerturbationEnergyKs
+      tolerance_key: "perturbation_tolerance"
     }
   }.freeze
 
@@ -37,31 +30,30 @@ class EvaluationKs
     DISPATCH_TABLE[problem_name]
   end
 
-  def run(experiment)
-    problem = experiment.problem
+  def run(problem)
     dispatch = self.class.dispatch_for(problem.name)
     raise "No dispatch mapping for problem: #{problem.name}" if dispatch.nil?
-    params = JSON.parse(problem.input_parameters || "{}")
 
+    input_params = JSON.parse(problem.input_parameters || "{}")
     benchmark_result = dispatch.fetch(:benchmark).new.run(problem)
 
     benchmark_value = extract_benchmark_scalar(problem.name, benchmark_result)
-    llm_value = extract_llm_scalar(experiment.parsed_answer)
+    expected_value = extract_expected_scalar(input_params)
+    tolerance = input_params.fetch(dispatch.fetch(:tolerance_key)).to_f
 
-    absolute_error = (benchmark_value - llm_value).abs
-    passed = absolute_error <= tolerance_for(problem.name, params)
+    absolute_error = (benchmark_value - expected_value).abs
+    passed = absolute_error <= tolerance
     error_class = classify_error(absolute_error, passed)
 
     evaluation = Evaluation.create!(
-      experiment: experiment,
       benchmark_value: benchmark_value,
-      llm_value: llm_value,
+      llm_value: expected_value,
       absolute_error: absolute_error,
       passed: passed,
       error_class: error_class
     )
 
-    create_error_log(evaluation, experiment, absolute_error, error_class) unless passed
+    create_error_log(evaluation, absolute_error, error_class) unless passed
 
     evaluation
   end
@@ -82,15 +74,10 @@ class EvaluationKs
     end
   end
 
-  def extract_llm_scalar(parsed_answer)
-    Array(JSON.parse(parsed_answer)).first.to_f
-  end
+  def extract_expected_scalar(input_params)
+    return input_params.fetch("expected_value").to_f if input_params.key?("expected_value")
 
-  def tolerance_for(problem_name, input_parameters)
-    tolerance_key = TOLERANCE_KEY_BY_PROBLEM[problem_name]
-    raise "No tolerance mapping for problem: #{problem_name}" if tolerance_key.nil?
-
-    input_parameters.fetch(tolerance_key).to_f
+    Array(input_params.fetch("expected_values")).first.to_f
   end
 
   def classify_error(absolute_error, passed)
@@ -100,13 +87,13 @@ class EvaluationKs
     "wrong_theorem"
   end
 
-  def create_error_log(evaluation, experiment, absolute_error, error_class)
+  def create_error_log(evaluation, absolute_error, error_class)
     ErrorLog.create!(
       evaluation: evaluation,
       error_code: error_class,
       error_detail: "Mean absolute error: #{absolute_error}",
-      llm_provider: experiment.llm_provider,
-      model_version: experiment.model_version
+      llm_provider: nil,
+      model_version: nil
     )
   end
 end

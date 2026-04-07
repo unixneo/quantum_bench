@@ -18,7 +18,9 @@ Problem.find_or_create_by(name: "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0")
     a_0: 5.29177210903e-11,
     r_values: [1.0, 2.0, 4.0, 6.0],
     r_units: "multiples of a_0",
-    normalization_tolerance: 1.0e-6
+    normalization_tolerance: 1.0e-6,
+    # Griffiths Table 4.7 normalization condition
+    expected_value: 1.0
   })
   p.expected_output_description = <<~OUTPUT
     Four values of R_21(r) evaluated at r = 1*a_0, 2*a_0, 4*a_0, 6*a_0.
@@ -42,7 +44,9 @@ Problem.find_or_create_by(name: "Spin-1/2 Rabi Oscillations") do |p|
     omega_1: 1.0e6,
     t_values: [0.0, 0.25, 0.5, 0.75, 1.0],
     t_units: "multiples of T",
-    oscillation_tolerance: 1.0e-6
+    oscillation_tolerance: 1.0e-6,
+    # Griffiths Section 4.3
+    expected_values: [0.0, 0.5, 1.0, 0.5, 0.0]
   })
   p.expected_output_description = <<~OUTPUT
     Five values of P(t) evaluated at t = 0, T/4, T/2, 3T/4, T.
@@ -71,11 +75,12 @@ Problem.find_or_create_by(name: "Two-level System Generalized Rabi Frequency") d
       { delta: -1.0e6, omega_1: 1.0e6 },
       { delta: 2.0e6, omega_1: 1.0e6 }
     ],
+    # Griffiths Section 4.3 exact analytical values
     expected_values: [
       1.0e6,
-      1_118_033.988749895,
-      1_414_213.562373095,
-      1_414_213.562373095,
+      1_118_033.9887498949,
+      1_414_213.5623730951,
+      1_414_213.5623730951,
       2_236_067.97749979
     ],
     frequency_tolerance: 1.0e-6
@@ -84,7 +89,7 @@ Problem.find_or_create_by(name: "Two-level System Generalized Rabi Frequency") d
     Five generalized Rabi frequencies omega_r for the given (delta, omega_1) pairs.
     Values must match omega_r = sqrt(delta^2 + omega_1^2) within tolerance.
   OUTPUT
-  p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 4.3; Cohen-Tannoudji, Quantum Mechanics, Vol. 1"
+  p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 4.3"
 end
 
 Problem.find_or_create_by(name: "WKB Tunneling Probability Through Rectangular Barrier") do |p|
@@ -110,6 +115,7 @@ Problem.find_or_create_by(name: "WKB Tunneling Probability Through Rectangular B
     e_eV: 1.0,
     l: 1.0e-9,
     ev_to_j: 1.60218e-19,
+    # Griffiths Section 9.3 exact formula
     expected_value: 1.2592852200516956e-09,
     tunneling_tolerance: 1.0e-12
   })
@@ -139,6 +145,7 @@ Problem.find_or_create_by(name: "First Order Perturbation Energy Correction in 1
     l: 1.0,
     epsilon: 0.1,
     n: 1,
+    # Griffiths Section 6.1 exact formula
     expected_value: 0.05,
     perturbation_tolerance: 1.0e-12
   })
