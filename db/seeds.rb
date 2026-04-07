@@ -50,3 +50,39 @@ Problem.find_or_create_by(name: "Spin-1/2 Rabi Oscillations") do |p|
   OUTPUT
   p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 4.3"
 end
+
+Problem.find_or_create_by(name: "Two-level System Generalized Rabi Frequency") do |p|
+  p.domain = "spin"
+  p.tier = 2
+  p.problem_statement = <<~STATEMENT
+    Compute the generalized Rabi frequency for a two-level system:
+    omega_r = sqrt(delta^2 + omega_1^2)
+    where delta is detuning and omega_1 is coupling frequency.
+
+    Evaluate omega_r for five parameter pairs:
+    (delta, omega_1) = (0, 1.0e6), (5.0e5, 1.0e6), (1.0e6, 1.0e6),
+    (-1.0e6, 1.0e6), and (2.0e6, 1.0e6), all in rad/s.
+  STATEMENT
+  p.input_parameters = JSON.generate({
+    pairs: [
+      { delta: 0.0, omega_1: 1.0e6 },
+      { delta: 5.0e5, omega_1: 1.0e6 },
+      { delta: 1.0e6, omega_1: 1.0e6 },
+      { delta: -1.0e6, omega_1: 1.0e6 },
+      { delta: 2.0e6, omega_1: 1.0e6 }
+    ],
+    expected_values: [
+      1.0e6,
+      1_118_033.988749895,
+      1_414_213.562373095,
+      1_414_213.562373095,
+      2_236_067.97749979
+    ],
+    frequency_tolerance: 1.0e-6
+  })
+  p.expected_output_description = <<~OUTPUT
+    Five generalized Rabi frequencies omega_r for the given (delta, omega_1) pairs.
+    Values must match omega_r = sqrt(delta^2 + omega_1^2) within tolerance.
+  OUTPUT
+  p.source_reference = "Griffiths, Introduction to Quantum Mechanics, 3rd ed., Section 4.3; Cohen-Tannoudji, Quantum Mechanics, Vol. 1"
+end

@@ -148,3 +148,25 @@ the working discipline established over the session history.
 > all workflow rules and known errors by number.
 
 ---
+
+## Error 8 — Generated Codex Prompt Instead of Preparing Handoff
+
+**Date:** 2026-04-07
+
+**What happened**
+When the user confirmed Problem 3 was complete and said "yes" to commit and
+move to Problem 4, Claude generated a Codex prompt for Problem 4 that included
+a commit step, instead of first updating HANDOFF_CHAT2.md, committing all
+current work, and providing the new chat handoff prompt to the user.
+
+The correct action at this point was to:
+1. Update HANDOFF_CHAT2.md with current gate status
+2. Commit all changes including HANDOFF_CHAT2.md
+3. Provide the new chat startup prompt to the user
+
+**Correct rule going forward**
+> When a session handoff is planned, always update HANDOFF_CHAT2.md and
+> commit before generating any further Codex prompts.
+> Never mix a commit step inside a Codex prompt when a handoff is pending.
+
+---
