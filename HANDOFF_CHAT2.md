@@ -72,6 +72,7 @@ Workflow: Claude (architect, prompt designer) + Codex (coder only)
 - [x] Gate 9: Per-problem tolerances, hydrogen fix, WKB false PASS corrected
 - [x] Gate 10: WKB intermediate gamma exposed in raw_response for error classification
 - [x] Gate 11: LLM KS files rewritten as deterministic Codex-written Ruby; API calls removed
+- [x] Gate 12: LLM KS layer removed; benchmark compared against Griffiths literature values
 
 ---
 
