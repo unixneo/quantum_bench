@@ -16,5 +16,9 @@ class DashboardController < ApplicationController
         passed: evaluation&.passed
       }
     end
+
+    @total_problems = @rows.size
+    @pass_count = @rows.count { |row| row[:passed] == true }
+    @fail_count = @rows.count { |row| row[:passed] == false }
   end
 end
