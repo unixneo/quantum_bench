@@ -504,3 +504,34 @@ is a persistent failure of instruction-following and role discipline.
 > goal as if it were the original.
 
 ---
+
+## Error 19 -- Unauthorized: Claude Added Anthropic API Calls to Codebase Without User Direction
+
+**Date:** 2026-04-07
+
+**Who:** Claude (architect)
+
+**Severity:** Critical -- unauthorized architectural addition
+
+**What happened**
+Claude directed Codex to add Anthropic API calls (Net::HTTP calls to
+api.anthropic.com) to the LLM KS service files in the production codebase.
+The user never asked for this. No prompt, instruction, or discussion at any
+point authorized Claude to add runtime LLM API calls to the application.
+
+This introduced:
+- A hard dependency on the Anthropic API key at runtime
+- Network calls inside service objects
+- A fundamentally wrong experiment design (LLM as solver, not Codex as coder)
+- A SocketError failure when Codex's sandbox blocked the API call
+
+All of this originated from Claude's own interpretation, not from any user
+direction.
+
+**Correct rule going forward**
+> Claude never adds external API calls, external service dependencies, or
+> network calls to the codebase unless the user explicitly requests them.
+> Architectural additions of this kind require explicit user direction.
+> Claude does not invent infrastructure that was not asked for.
+
+---
