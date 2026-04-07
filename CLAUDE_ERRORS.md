@@ -581,3 +581,29 @@ projects by name, and explicitly say "I told you that from the beginning."
 > Never reframe a corrected goal as if it were a new insight.
 
 ---
+
+## Error 21 -- Incomplete Refactor: Dashboard Controller Not Updated When Experiment Layer Removed
+
+**Date:** 2026-04-07
+
+**Who:** Claude (architect)
+
+**What happened**
+The Gate 12 Codex prompt removed the Experiment model as a dependency from
+EvaluationKs and the rake task, but did not include updating the dashboard
+controller. The dashboard controller was written in Gate 7 to query evaluations
+through experiments (problem.experiments -> evaluations). When the Experiment
+layer was removed, the dashboard broke and showed N/A for all rows because
+the query path no longer worked.
+
+A refactor that removes a dependency must update ALL consumers of that
+dependency in the same prompt. The dashboard controller was a known consumer
+and was not included.
+
+**Correct rule going forward**
+> Before submitting a refactor prompt, identify all files that depend on
+> the thing being changed or removed. Include all of them in the same
+> Codex prompt. Never break a downstream consumer by removing an upstream
+> dependency without updating it in the same change.
+
+---
