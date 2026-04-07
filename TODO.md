@@ -32,6 +32,7 @@ Tier 2 quantum mechanics problems are the test vehicle.
 - [x] Gate 7: Results dashboard (dark theme, card layout, blackboard style)
 - [x] Gate 8: EvaluationKs generalized, experiment:run_all, all 5 experiments executed
 - [x] Gate 9: Per-problem tolerances, hydrogen fix, WKB false PASS corrected
+- [x] Gate 10: WKB intermediate gamma exposed in raw_response for error classification
 
 ---
 
