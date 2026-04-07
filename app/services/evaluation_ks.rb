@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 class EvaluationKs
-  PASS_THRESHOLD = 1.0e-6
   ARITHMETIC_THRESHOLD = 1.0e-3
+  TOLERANCE_KEY_BY_PROBLEM = {
+    "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0" => "normalization_tolerance",
+    "Spin-1/2 Rabi Oscillations" => "oscillation_tolerance",
+    "Two-level System Generalized Rabi Frequency" => "frequency_tolerance",
+    "WKB Tunneling Probability Through Rectangular Barrier" => "tunneling_tolerance",
+    "First Order Perturbation Energy Correction in 1D Box" => "perturbation_tolerance"
+  }.freeze
 
   DISPATCH_TABLE = {
     "Hydrogen Atom Radial Wavefunction n=2 l=1 m=0" => {
@@ -35,6 +41,7 @@ class EvaluationKs
     problem = experiment.problem
     dispatch = self.class.dispatch_for(problem.name)
     raise "No dispatch mapping for problem: #{problem.name}" if dispatch.nil?
+    params = JSON.parse(problem.input_parameters || "{}")
 
     benchmark_result = dispatch.fetch(:benchmark).new.run(problem)
 
@@ -42,7 +49,7 @@ class EvaluationKs
     llm_value = extract_llm_scalar(experiment.parsed_answer)
 
     absolute_error = (benchmark_value - llm_value).abs
-    passed = absolute_error < PASS_THRESHOLD
+    passed = absolute_error <= tolerance_for(problem.name, params)
     error_class = classify_error(absolute_error, passed)
 
     evaluation = Evaluation.create!(
@@ -77,6 +84,13 @@ class EvaluationKs
 
   def extract_llm_scalar(parsed_answer)
     Array(JSON.parse(parsed_answer)).first.to_f
+  end
+
+  def tolerance_for(problem_name, input_parameters)
+    tolerance_key = TOLERANCE_KEY_BY_PROBLEM[problem_name]
+    raise "No tolerance mapping for problem: #{problem_name}" if tolerance_key.nil?
+
+    input_parameters.fetch(tolerance_key).to_f
   end
 
   def classify_error(absolute_error, passed)
