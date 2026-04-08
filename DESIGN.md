@@ -5,10 +5,8 @@
 This project builds a numerical computation engine for applied quantum mechanics
 problems using a deterministic blackboard/KS architecture.
 
-The primary research goal is to evaluate a controlled experiment in multi-agent
-LLM-assisted scientific software development: can Claude (as architect) and Codex
-(as coder) produce correct numerical implementations of quantum mechanics problems
-that agree with peer-reviewed literature values from Griffiths?
+The primary research goal is to evaluate deterministic Ruby implementations of
+quantum mechanics formulas against peer-reviewed analytical values from Griffiths.
 
 **What the system does:**
 Given a quantum mechanics problem specification, it:
@@ -29,7 +27,7 @@ Strictly limited to:
 - Tier 2 applied quantum mechanics problems
 - Exact analytical solutions with pure Ruby benchmark implementations
 - Single-particle, time-independent or simple time-dependent problems
-- Ground truth: Numo::NArray-based Ruby computations
+- Ground truth: deterministic Ruby benchmark computations
 
 Out of scope:
 - Many-body systems
@@ -61,17 +59,11 @@ Problem → Benchmark KS → Evaluation KS → ErrorLog
 
 ### L2 — Benchmark KS
 - pure Ruby implementation of exact analytical solution
-- Numo::NArray for array operations
-- special functions implemented from scratch
+- optional array math utilities where needed
 - deterministic, no external dependencies
 
-### L3 — LLM KS
-- LLM-generated Ruby implementation
-- same input parameters as benchmark
-- produces numerical output
-
-### L4 — Evaluation KS
-- numerical comparison: absolute error, relative error
+### L3 — Evaluation KS
+- numerical comparison: absolute error
 - pass/fail against tolerance
 - error class assignment
 - error log entry
@@ -84,20 +76,20 @@ Problem → Benchmark KS → Evaluation KS → ErrorLog
 - Pure Ruby benchmark -- no Python, no scipy
 - Minimal scope
 - No premature abstraction
-- Validation against benchmark is mandatory
+- Validation against literature expected values is mandatory
 - Error taxonomy is a first-class artifact
 
 ---
 
 ## 6. Validation Strategy
 
-Each LLM implementation must be compared against:
+Each benchmark implementation is compared against:
 - Pure Ruby benchmark computation
+- Griffiths expected analytical value from problem seed data
 - Tolerance threshold (problem-specific)
 
 The system is considered correct only if:
-- Numerical output matches benchmark within tolerance
-- Derivation chain is classifiable
+- Numerical benchmark output matches literature value within tolerance
 - Error class is documented
 
 ---
@@ -125,27 +117,25 @@ This system does NOT aim to:
 
 ### From stellar_pop
 - Ground truth must be exact and computable -- diffuse benchmarks cannot close the loop
-- LLM errors must be classifiable -- open-ended outputs produce unclassifiable errors
+- Evaluation errors must be classifiable with deterministic thresholds
 
 ### From protein_variants
 - Ground truth that is too tight produces trivial error surfaces
-- Codebase complexity must genuinely stress the multi-agent workflow
-- The derivation chain matters as much as the final answer
+- Codebase complexity must still preserve reproducible numerical checks
+- The derivation chain matters only where it affects reproducibility
 
 **protein_variants reference implementation:**
 - GitHub: https://github.com/unixneo/protein_variants
 - DOI: https://doi.org/10.5281/zenodo.19436320
 
 The quantum_bench architecture, .md documentation structure, blackboard/KS design
-pattern, multi-agent workflow (Claude architect, Codex coder), gate-based confirmation
-process, and error taxonomy methodology were all directly informed by reviewing the
-protein_variants project files prior to starting this project.
+pattern, and gate-based confirmation process were directly informed by reviewing
+the protein_variants project files prior to starting this project.
 
 ### Applied here
 - Benchmark is pure Ruby, deterministic, self-contained
 - Problems chosen for derivation complexity, not lookup complexity
-- Error taxonomy covers: wrong_theorem, wrong_boundary, normalization_failure,
-  arithmetic_error, hallucinated_step, correct
+- Error taxonomy used in evaluation: correct, arithmetic_error, wrong_theorem
 
 ---
 
@@ -170,18 +160,18 @@ Code review by Claude violates role separation and introduces subjective judgmen
 the experiment design calls for objective numerical comparison.
 
 The only reviewer is the math:
-- If rspec passes and numerical output matches the benchmark within tolerance, the code is correct
+- If rspec passes and numerical benchmark output matches literature value within tolerance, the code is correct
 - If rspec fails, Codex fixes it
-- If numerical output diverges from benchmark, that is a documented error
+- If numerical output diverges from literature value, that is a documented error
 
 Claude reviewing Codex code is Claude doing Codex's job. This is prohibited.
 
 ### 11.2 The Math is the Reviewer
 
-Every LLM KS implementation is evaluated solely by:
+Every benchmark KS implementation is evaluated solely by:
 - rspec pass/fail
-- Numerical comparison against the benchmark KS output
+- Numerical comparison against Griffiths literature value
 - Tolerance threshold defined per problem
 
 No subjective code inspection. No Claude judgment on implementation style or approach.
-The benchmark either confirms or rejects the output. That result is documented.
+The benchmark either confirms or rejects agreement with literature. That result is documented.
