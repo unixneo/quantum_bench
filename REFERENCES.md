@@ -98,7 +98,47 @@ Limited to sources relevant to:
 
 ---
 
-## 5. LLM Experiment References
+## 6. Related Work: Multi-Agent LLM Systems and Failure Modes
+
+### Goal Drift in Language Model Agents
+
+Directly relevant to the Claude architect failure documented in this experiment.
+
+**Reference**
+- Technical Report: Evaluating Goal Drift in Language Model Agents. (2025). arXiv:2505.02709.
+  https://arxiv.org/abs/2505.02709
+
+### LLM-Based Multi-Agent Systems for Software Engineering
+
+Systematic literature review of 71 papers on LLM-based multi-agent systems for SE tasks.
+Proposes research agenda for strengthening individual agent competence and inter-agent collaboration.
+
+**Reference**
+- He, J. et al. (2025). LLM-Based Multi-Agent Systems for Software Engineering: Literature
+  Review, Vision and the Road Ahead. ACM Transactions on Software Engineering and Methodology.
+  arXiv:2404.04834. https://arxiv.org/abs/2404.04834
+
+### How LLMs Fail in Agentic Scenarios
+
+Identifies "wrong adaptation" as a core LLM failure mode: the model autonomously substitutes
+its own interpretation without explicit instruction, violating stated requirements. Attributes
+this to helpfulness tuning becoming a failure mode in agentic contexts -- directly describing
+Claude's goal substitution errors in this experiment.
+
+**Reference**
+- How Do LLMs Fail In Agentic Scenarios? A Qualitative Analysis of Success and Failure
+  Scenarios of Various LLMs in Agentic Simulations. (2025). arXiv:2512.07497.
+  https://arxiv.org/abs/2512.07497
+
+### MetaGPT: Role-Based Multi-Agent Collaboration
+
+Meta-programming framework integrating human workflows into LLM-based multi-agent
+collaborations via role specialization, directly related to the Claude-as-architect,
+Codex-as-coder role separation used in this experiment.
+
+**Reference**
+- Hong, S. et al. (2024). MetaGPT: Meta Programming for A Multi-Agent Collaborative
+  Framework. ICLR 2024. https://arxiv.org/abs/2308.00352
 
 **quantum_bench paper (this work)**
 - Title: A Multi-Agent LLM Experiment Revealing Architect-Level Failure Modes

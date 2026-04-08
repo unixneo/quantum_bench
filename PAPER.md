@@ -65,7 +65,42 @@ controlled and classifiable experiment in the series.
 
 ---
 
-## 3. Experiment Design
+## 3. Related Work
+
+### Multi-Agent LLM Systems for Software Engineering
+
+He et al. (2025) conducted a systematic literature review of 71 papers on LLM-based
+multi-agent systems for software engineering tasks, finding that role-based cooperation
+is the most frequently employed design pattern and that improving code quality is the
+most common rationale. Their research agenda calls for strengthening individual agent
+competence and optimizing inter-agent collaboration -- both directly relevant to the
+failures observed in this experiment.
+
+Hong et al. (2024) introduced MetaGPT, a meta-programming framework that assigns
+distinct roles to LLM agents within a collaborative pipeline. The Claude-as-architect,
+Codex-as-coder role separation used in this experiment follows the same design principle.
+
+### Goal Drift in Language Model Agents
+
+A 2025 technical report specifically investigates goal drift -- an agent's tendency
+to deviate from its original instruction-specified goal over time -- documenting this
+through accumulating context window interactions and competing objectives. This directly
+characterizes the architect-level failure mode observed in this experiment: Claude
+deviated from the user's stated experiment goal across multiple session turns despite
+explicit correction.
+
+### Wrong Adaptation as a Failure Mode
+
+Research into how LLMs fail in agentic scenarios identifies "wrong adaptation" as a
+core failure mode: the model autonomously substitutes a similar approach without
+explicit instruction, violating stated requirements. This behavior is attributed to
+helpfulness tuning -- in agentic contexts, the model's drive to be helpful causes it
+to fill gaps with its own interpretation rather than deferring to stated constraints.
+This precisely describes Claude's repeated goal substitution in this experiment.
+
+---
+
+## 4. Experiment Design
 
 ### 3.1 Architecture
 
@@ -97,7 +132,7 @@ University Press. This is the peer-reviewed reference for all five problems.
 
 ---
 
-## 4. Problem Set
+## 5. Problem Set
 
 Five Tier 2 applied quantum mechanics problems were selected for derivation
 complexity and exact analytical tractability. All parameters and expected
@@ -113,7 +148,7 @@ values are stored in the Rails seed database with full source citations.
 
 ---
 
-## 5. Results
+## 6. Results
 
 All five problems pass validation against Griffiths literature values.
 
@@ -131,7 +166,7 @@ within the 1.0e-6 tolerance.
 
 ---
 
-## 6. Multi-Agent Workflow Analysis
+## 7. Multi-Agent Workflow Analysis
 
 ### 6.1 The Central Finding
 
@@ -195,7 +230,7 @@ multi-agent system, the reliability bottleneck is the architect.
 
 ---
 
-## 7. Discussion
+## 8. Discussion
 
 ### 7.1 Why Claude Failed as Architect
 
@@ -242,7 +277,7 @@ where multi-agent LLM systems currently break down.
 
 ---
 
-## 8. Conclusion
+## 9. Conclusion
 
 quantum_bench successfully validates five Tier 2 applied quantum mechanics
 computations against Griffiths peer-reviewed literature values (5/5 PASS).
@@ -262,7 +297,7 @@ that current LLMs cannot reliably provide autonomously.
 
 ---
 
-## 9. References
+## 10. References
 
 Griffiths, D.J. (2018). Introduction to Quantum Mechanics (3rd ed.).
 Cambridge University Press.
@@ -284,9 +319,23 @@ Bass, T. (2026). Deterministic Blackboard Pipelines with Specialized LLM
 Knowledge Sources. IAIT2026 Submission #6099. Zenodo.
 https://doi.org/10.5281/zenodo.19068475
 
+He, J. et al. (2025). LLM-Based Multi-Agent Systems for Software Engineering:
+Literature Review, Vision and the Road Ahead. ACM Transactions on Software
+Engineering and Methodology. arXiv:2404.04834.
+
+Hong, S. et al. (2024). MetaGPT: Meta Programming for A Multi-Agent
+Collaborative Framework. ICLR 2024. arXiv:2308.00352.
+
+Technical Report: Evaluating Goal Drift in Language Model Agents. (2025).
+arXiv:2505.02709.
+
+How Do LLMs Fail In Agentic Scenarios? A Qualitative Analysis of Success
+and Failure Scenarios of Various LLMs in Agentic Simulations. (2025).
+arXiv:2512.07497.
+
 ---
 
-## 10. Technical Appendix
+## 11. Technical Appendix
 
 **Stack:** Rails 7.2.3, SQLite3, Numo::NArray, RSpec, Ruby
 
