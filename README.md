@@ -1,4 +1,8 @@
-# quantum_bench
+
+
+# quantum_bench (draft v0.1.0)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19466731.svg)](https://doi.org/10.5281/zenodo.19466731)
 
 A Rails application for LLM-assisted computation of applied quantum mechanics problems.
 

@@ -1,0 +1,37 @@
+{
+  "title": "quantum_bench: A Multi-Agent LLM Experiment Revealing Architect-Level Failure Modes in Scientific Software Development",
+  "description": "A controlled experiment in multi-agent LLM-assisted scientific software development. The system implements exact analytical solutions to five Tier 2 applied quantum mechanics problems in pure Ruby and validates computed results against peer-reviewed literature values from Griffiths and Schroeter (2018). The experiment employs a two-agent architecture: Claude as architect (prompt designer) and Codex as coder (Ruby implementer). The primary finding is not about quantum mechanics -- it is about the multi-agent workflow itself. Claude made 21 documented errors across five error groups (goal substitution, incomplete refactors, context loss, prompt design gaps, and process violations). Codex made zero documented architectural errors. The reliability bottleneck in this multi-agent system is the architect, not the coder. All five quantum mechanics problems pass validation against Griffiths and Schroeter peer-reviewed literature values. 44 RSpec examples, 0 failures.",
+  "creators": [
+    {
+      "name": "Bass, Tim",
+      "orcid": "0000-0001-9368-6838",
+      "affiliation": "Independent Researcher"
+    }
+  ],
+  "keywords": [
+    "LLM-assisted software development",
+    "multi-agent systems",
+    "blackboard architecture",
+    "quantum mechanics",
+    "scientific software engineering",
+    "goal substitution",
+    "architect failure modes",
+    "Ruby on Rails",
+    "SQLite",
+    "Claude",
+    "Codex",
+    "Griffiths"
+  ],
+  "license": "MIT",
+  "version": "v0.1.0",
+  "upload_type": "software",
+  "publication_date": "2026-04-08",
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.19436320",
+      "relation": "isSupplementTo",
+      "scheme": "doi"
+    }
+  ],
+  "notes": "Development workflow: Claude (Anthropic) as architect, scientist, and prompt author; Codex CLI as code implementer. 21 Claude errors documented in CLAUDE_ERRORS.md across five severity groups. Zero Codex architectural errors. Repository: https://github.com/unixneo/quantum_bench"
+}
