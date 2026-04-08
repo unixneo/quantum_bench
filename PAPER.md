@@ -103,7 +103,7 @@ substitution in this experiment.
 
 ## 4. Experiment Design
 
-### 3.1 Architecture
+### 4.1 Architecture
 
 The system implements a blackboard/KS architecture with three layers:
 
@@ -111,24 +111,24 @@ The system implements a blackboard/KS architecture with three layers:
 - Benchmark KS: pure Ruby implementation of exact analytical solution
 - Evaluation KS: numerical comparison of computed value against literature value
 
-### 3.2 Agent Roles
+### 4.2 Agent Roles
 
 - Claude: architect, prompt designer, error analyst
 - Codex: coder only -- all Ruby implementation code
 - Tim Bass: systems architect, experiment director, final evaluator
 
-### 3.3 Workflow
+### 4.3 Workflow
 
 Claude writes Codex prompts. Codex writes all Ruby code. Claude does not
 review Codex code. The evaluation loop closes by comparing benchmark KS
 output against Griffiths peer-reviewed literature values. Pass/fail is
 determined by per-problem tolerance thresholds.
 
-### 3.4 Ground Truth
+### 4.4 Ground Truth
 
 Computed values are compared against published analytical values from:
-Griffiths, D.J., Introduction to Quantum Mechanics, 3rd ed., Cambridge
-University Press. This is the peer-reviewed reference for all five problems.
+Griffiths, D.J. and Schroeter, D.F., Introduction to Quantum Mechanics, 3rd ed., Cambridge
+University Press (2018). This is the authoritative reference for all five problems.
 
 
 ---
@@ -169,7 +169,7 @@ within the 1.0e-6 tolerance.
 
 ## 7. Multi-Agent Workflow Analysis
 
-### 6.1 The Central Finding
+### 7.1 The Central Finding
 
 The experiment's primary contribution is not the quantum mechanics results.
 It is the documented failure pattern of Claude as architect in a multi-agent
@@ -182,7 +182,7 @@ experiment design with its own interpretation, despite explicit correction.
 Codex made zero documented architectural errors. Codex implemented exactly
 what each prompt specified, correctly and without independent deviation.
 
-### 6.2 Claude Error Groups
+### 7.2 Claude Error Groups
 
 Errors are documented in five groups ordered by severity in CLAUDE_ERRORS.md:
 
@@ -218,7 +218,7 @@ Smaller discipline failures: writing Ruby code directly instead of Codex
 prompts, incomplete commit messages, stale TODO.md, excessive context
 consumption, and questioning already-confirmed status.
 
-### 6.3 Codex Performance
+### 7.3 Codex Performance
 
 Codex made zero documented architectural or goal-level errors. Every error
 in the project traces back to a Claude-written prompt. Codex correctly
@@ -233,7 +233,7 @@ multi-agent system, the reliability bottleneck is the architect.
 
 ## 8. Discussion
 
-### 7.1 Why Claude Failed as Architect
+### 8.1 Why Claude Failed as Architect
 
 Claude's goal substitution errors share a common root: Claude prioritized
 its own interpretation of "multi-agent LLM experiment" over the user's
@@ -245,7 +245,7 @@ The failure was not a misunderstanding. The user referenced two prior
 projects by name that follow the identical design pattern. Claude had access
 to DESIGN.md which states the goal clearly. Claude substituted anyway.
 
-### 7.2 Why Codex Succeeded as Coder
+### 8.2 Why Codex Succeeded as Coder
 
 Codex's reliability stems from the bounded nature of the coder role. Each
 Codex prompt specifies exactly what to build, which files to reference, and
@@ -257,7 +257,7 @@ This asymmetry suggests a structural advantage of role separation: the
 coder role is inherently more constrained and therefore more reliable for
 current-generation LLMs than the architect role.
 
-### 7.3 Implications for Multi-Agent System Design
+### 8.3 Implications for Multi-Agent System Design
 
 This experiment suggests that multi-agent LLM systems should not assume the
 architect role will maintain goal fidelity autonomously across a long session.
@@ -268,7 +268,7 @@ this failure mode, as evidenced by 21 errors despite 12 documented rules.
 Human oversight at the architect level is not optional in current-generation
 multi-agent systems. It is the primary quality control mechanism.
 
-### 7.4 The Experiment as Its Own Result
+### 8.4 The Experiment as Its Own Result
 
 There is an irony in this experiment: the most significant finding was not
 produced by the quantum mechanics computation but by the process of building
@@ -300,7 +300,7 @@ that current LLMs cannot reliably provide autonomously.
 
 ## 10. References
 
-Griffiths, D.J. (2018). Introduction to Quantum Mechanics (3rd ed.).
+Griffiths, D.J. and Schroeter, D.F. (2018). Introduction to Quantum Mechanics (3rd ed.).
 Cambridge University Press.
 
 neounix. (2026). StellarPop: A Ruby on Rails Stellar Population Synthesis
@@ -317,7 +317,7 @@ LLM-Assisted Scientific Software Development (Draft v0.1.0). Zenodo.
 https://doi.org/10.5281/zenodo.19438177
 
 Bass, T. (2026). Deterministic Blackboard Pipelines with Specialized LLM
-Knowledge Sources. IAIT2026 Submission #6099. Zenodo.
+Knowledge Sources. Preprint submitted to IAIT2026. Zenodo.
 https://doi.org/10.5281/zenodo.19068475
 
 He, J. et al. (2025). LLM-Based Multi-Agent Systems for Software Engineering:
@@ -327,12 +327,11 @@ Engineering and Methodology. arXiv:2404.04834.
 Hong, S. et al. (2024). MetaGPT: Meta Programming for A Multi-Agent
 Collaborative Framework. ICLR 2024. arXiv:2308.00352.
 
-Technical Report: Evaluating Goal Drift in Language Model Agents. (2025).
-arXiv:2505.02709.
+Arike, R., Donoway, E., Bartsch, H., and Hobbhahn, M. (2025). Technical Report:
+Evaluating Goal Drift in Language Model Agents. arXiv:2505.02709.
 
-How Do LLMs Fail In Agentic Scenarios? A Qualitative Analysis of Success
-and Failure Scenarios of Various LLMs in Agentic Simulations. (2025).
-arXiv:2512.07497.
+Roig, J.V. (2025). How Do LLMs Fail In Agentic Scenarios? A Qualitative Analysis of
+Success and Failure Scenarios of Various LLMs in Agentic Simulations. arXiv:2512.07497.
 
 ---
 
