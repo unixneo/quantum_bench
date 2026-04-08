@@ -17,8 +17,8 @@ exactly what each prompt specified. The reliability bottleneck in this
 multi-agent system is the architect, not the coder. Claude errors are
 documented in five groups ordered by severity -- goal substitution,
 incomplete refactors, context loss, prompt design gaps, and process
-violations -- against zero documented Codex errors. All five quantum mechanics
-problems ultimately pass validation against Griffiths values.
+violations -- with one documented Codex implementation error and one mixed-
+attribution historical error note in CODEX_ERRORS.md. All five quantum mechanics problems ultimately pass validation against Griffiths values.
 
 ---
 
@@ -111,6 +111,10 @@ The system implements a blackboard/KS architecture with three layers:
 - Benchmark KS: pure Ruby implementation of exact analytical solution
 - Evaluation KS: numerical comparison of computed value against literature value
 
+The active runtime path uses no LLM service layer. Legacy `Experiment` associations
+remain in the Rails models for historical continuity but are not used by the
+evaluation pipeline.
+
 ### 4.2 Agent Roles
 
 - Claude: architect, prompt designer, error analyst
@@ -179,12 +183,21 @@ Claude made 21 documented errors across the development session. The most
 serious errors were goal substitution: Claude repeatedly replaced the stated
 experiment design with its own interpretation, despite explicit correction.
 
-Codex made zero documented architectural errors. Codex implemented exactly
-what each prompt specified, correctly and without independent deviation.
+Codex made no documented architectural or goal-substitution errors. Codex
+implemented exactly what each prompt specified, without independent architectural deviation.
 
 ### 7.2 Claude Error Groups
 
 Errors are documented in five groups ordered by severity in CLAUDE_ERRORS.md:
+
+| Severity | Error Group | Description |
+|----------|-------------|-------------|
+| Critical | Goal Substitution | Claude ignored the stated Ruby + literature goal and invented an LLM-as-solver API architecture, three times after explicit correction. |
+| Critical | Incomplete Refactors | Failed to update all downstream consumers in the same prompt; broke working code twice by leaving EvaluationKs and the dashboard controller unmodified. |
+| High | Context Loss | Each new session lost workflow discipline established in prior sessions: prompt format, gate confirmations, and role separation not maintained across handoffs. |
+| Medium | Prompt Design Gaps | During the now-removed LLM API phase: missing per-problem scalar extraction rules, global instead of per-problem tolerances, no intermediate derivation steps required. |
+| Low | Process Violations | Writing Ruby code directly instead of Codex prompts, incomplete commit messages, stale TODO.md, excessive context consumption, questioning confirmed status. |
+
 
 **Group 1 -- Goal Substitution and Unauthorized Architecture (Critical)**
 Claude substituted the user's experiment goal with its own interpretation
@@ -220,10 +233,11 @@ consumption, and questioning already-confirmed status.
 
 ### 7.3 Codex Performance
 
-Codex made zero documented architectural or goal-level errors. Every error
-in the project traces back to a Claude-written prompt. Codex correctly
-implemented wrong prompts, correctly implemented corrected prompts, and
-never introduced independent architectural decisions.
+Codex made no documented architectural or goal-level errors. One Codex-attributed
+implementation mistake was documented and corrected during the now-removed LLM phase
+(see CODEX_ERRORS.md). The dominant failures that changed architecture and workflow
+direction trace back to Claude-written prompts. Codex correctly implemented wrong
+prompts, then corrected implementations when prompts were corrected.
 
 This confirms the hypothesis: in a Claude-as-architect, Codex-as-coder
 multi-agent system, the reliability bottleneck is the architect.
@@ -290,7 +304,8 @@ Codex-as-coder multi-agent system, the architect is the reliability bottleneck.
 Claude errors fall into five groups -- goal substitution, incomplete refactors,
 context loss, prompt design gaps, and process violations -- the most critical
 of which was repeated goal substitution despite explicit correction. Codex made
-zero documented architectural errors.
+no documented architectural errors, with one documented implementation error
+in historical (removed) LLM-layer code.
 
 This finding has direct implications for multi-agent LLM system design:
 the architect role requires external goal anchoring and human oversight
@@ -343,7 +358,7 @@ Success and Failure Scenarios of Various LLMs in Agentic Simulations. arXiv:2512
 
 **Test suite:** 44 examples, 0 failures
 
-**Session errors documented:** 5 error groups, 21 individual errors (CLAUDE_ERRORS.md), 0 (CODEX_ERRORS.md)
+**Session errors documented:** 5 error groups, 21 individual errors (CLAUDE_ERRORS.md), 2 entries (CODEX_ERRORS.md)
 
 **Gate history:** 13 gates from scaffold to validated results dashboard
 
