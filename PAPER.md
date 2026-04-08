@@ -275,6 +275,11 @@ Scientific Software Development Using a Blackboard Knowledge Source
 Architecture for Deterministic Protein Missense Variant Interpretation
 (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.19436320
 
+Bass, T. (2026). A Deterministic Blackboard Knowledge Source Engine for
+Protein Missense Variant Interpretation: A Controlled Experiment in
+LLM-Assisted Scientific Software Development (Draft v0.1.0). Zenodo.
+https://doi.org/10.5281/zenodo.19438177
+
 Bass, T. (2026). Deterministic Blackboard Pipelines with Specialized LLM
 Knowledge Sources. IAIT2026 Submission #6099. Zenodo.
 https://doi.org/10.5281/zenodo.19068475
