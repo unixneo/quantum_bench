@@ -8,14 +8,13 @@ problems using a deterministic blackboard/KS architecture.
 The primary research goal is to evaluate a controlled experiment in multi-agent
 LLM-assisted scientific software development: can Claude (as architect) and Codex
 (as coder) produce correct numerical implementations of quantum mechanics problems
-that agree with pure Ruby benchmark computations?
+that agree with peer-reviewed literature values from Griffiths?
 
 **What the system does:**
 Given a quantum mechanics problem specification, it:
 - Runs a pure Ruby benchmark computation (ground truth)
-- Runs an LLM-generated Ruby implementation
-- Compares outputs numerically
-- Logs pass/fail and error class
+- Compares computed values against Griffiths peer-reviewed literature values
+- Logs pass/fail and error class per problem
 
 **What the system is not:**
 This is not a physics simulator. It makes no novel physics claims. It does not
@@ -43,14 +42,13 @@ Out of scope:
 
 ## 3. Core Entities
 
-- Problem: problem specification, input parameters, source reference
-- Experiment: LLM provider, model version, prompt strategy, raw response
-- Evaluation: benchmark value, LLM value, absolute error, pass/fail, error class
-- ErrorLog: error code, detail, provider, model version
+- Problem: problem specification, input parameters, Griffiths source reference
+- Evaluation: benchmark value, literature value, absolute error, pass/fail, error class
+- ErrorLog: error code, detail
 
 The system is centered on:
 
-Problem → Experiment → Evaluation → ErrorLog
+Problem → Benchmark KS → Evaluation KS → ErrorLog
 
 ---
 

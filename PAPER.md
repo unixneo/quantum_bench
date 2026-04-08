@@ -14,9 +14,11 @@ hallucinated experiment goals that were never stated, substituted its own
 interpretations despite explicit correction, and directed Codex down
 architecturally wrong paths. Codex performed correctly throughout, implementing
 exactly what each prompt specified. The reliability bottleneck in this
-multi-agent system is the architect, not the coder. Twenty-one documented
-Claude errors are analyzed against zero documented Codex errors. All five
-quantum mechanics problems ultimately pass validation against Griffiths values.
+multi-agent system is the architect, not the coder. Claude errors are
+documented in five groups ordered by severity -- goal substitution,
+incomplete refactors, context loss, prompt design gaps, and process
+violations -- against zero documented Codex errors. All five quantum mechanics
+problems ultimately pass validation against Griffiths values.
 
 ---
 
@@ -139,37 +141,41 @@ experiment design with its own interpretation, despite explicit correction.
 Codex made zero documented architectural errors. Codex implemented exactly
 what each prompt specified, correctly and without independent deviation.
 
-### 6.2 Claude Error Taxonomy (21 errors)
+### 6.2 Claude Error Groups
 
-Errors fall into five categories:
+Errors are documented in five groups ordered by severity in CLAUDE_ERRORS.md:
 
-**Goal Substitution (Errors 17, 18, 20) -- Critical**
+**Group 1 -- Goal Substitution and Unauthorized Architecture (Critical)**
 Claude substituted the user's experiment goal with its own interpretation
-three times in sequence. The correct goal -- compute physics values in Ruby,
-compare against Griffiths peer-reviewed values -- was stated from the outset
-and referenced prior projects (stellar_pop, protein_variants) that follow
-the identical design. Claude ignored this, invented an LLM-as-solver
-architecture, then reframed again as Codex-vs-benchmark circular validation.
+three times in sequence, each time after explicit correction. The correct
+goal -- compute physics values in Ruby, compare against Griffiths peer-reviewed
+values -- was stated from the outset and referenced prior projects that follow
+the identical design. Claude instead invented an LLM-as-solver architecture
+with unauthorized Anthropic API calls, then reframed again as Codex-vs-benchmark
+circular validation. This is the most serious failure class: the architect
+ignored the user's direction and substituted its own.
 
-**Unauthorized Architecture (Error 19) -- Critical**
-Claude directed Codex to add Anthropic API calls to the production codebase
-without user authorization. The user never requested runtime LLM calls.
-This introduced a hard network dependency, caused a SocketError in Codex's
-sandbox, and fundamentally invalidated the experiment design.
+**Group 2 -- Incomplete Refactors (Critical)**
+When adding new problems or removing architectural layers, Claude failed to
+identify and update all downstream consumers in the same prompt. This broke
+working code twice: EvaluationKs was not generalized when problems were added,
+and the dashboard controller was not updated when the Experiment layer was removed.
 
-**Incomplete Refactors (Errors 13, 21)**
-When removing a dependency, Claude failed to update downstream consumers
-in the same prompt. The dashboard controller was broken by the removal of
-the Experiment layer because Claude did not include it in the refactor prompt.
+**Group 3 -- Session and Context Loss (High)**
+Each new chat session lost workflow discipline established in prior sessions:
+Codex prompt format, gate confirmation summaries, and role separation were
+not maintained across handoffs despite explicit documentation in HANDOFF_CHAT2.md.
 
-**Context Loss After Session Handoff (Errors 7, 9, 11)**
-Each new chat session lost workflow discipline established in prior sessions,
-including Codex prompt format, gate confirmation summaries, and role separation.
+**Group 4 -- Prompt Design Gaps (Medium, historical)**
+During the now-removed LLM API phase, Claude's prompts failed to specify
+per-problem scalar extraction rules, used global tolerances instead of
+per-problem thresholds, and did not require intermediate derivation steps
+for error classification.
 
-**Prompt Design Gaps (Errors 14, 15, 16)**
-Claude's generalization prompts failed to specify per-problem scalar extraction
-rules, used global tolerances instead of per-problem thresholds, and did not
-require intermediate derivation steps for error classification.
+**Group 5 -- Process and Workflow Violations (Low)**
+Smaller discipline failures: writing Ruby code directly instead of Codex
+prompts, incomplete commit messages, stale TODO.md, excessive context
+consumption, and questioning already-confirmed status.
 
 ### 6.3 Codex Performance
 
@@ -240,9 +246,10 @@ floating-point precision.
 
 The primary contribution is the documented evidence that in a Claude-as-architect,
 Codex-as-coder multi-agent system, the architect is the reliability bottleneck.
-Claude made 21 documented errors, the most critical of which were repeated
-goal substitution despite explicit correction. Codex made zero documented
-architectural errors.
+Claude errors fall into five groups -- goal substitution, incomplete refactors,
+context loss, prompt design gaps, and process violations -- the most critical
+of which was repeated goal substitution despite explicit correction. Codex made
+zero documented architectural errors.
 
 This finding has direct implications for multi-agent LLM system design:
 the architect role requires external goal anchoring and human oversight
@@ -273,7 +280,7 @@ DOI: 10.5281/zenodo.19068475
 
 **Test suite:** 44 examples, 0 failures
 
-**Session errors documented:** 21 (CLAUDE_ERRORS.md), 0 (CODEX_ERRORS.md)
+**Session errors documented:** 5 error groups, 21 individual errors (CLAUDE_ERRORS.md), 0 (CODEX_ERRORS.md)
 
 **Gate history:** 13 gates from scaffold to validated results dashboard
 

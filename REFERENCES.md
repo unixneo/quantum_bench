@@ -88,6 +88,12 @@ Limited to sources relevant to:
 
 ---
 
-## 4. LLM Experiment References
+## 5. LLM Experiment References
 
-<!-- To be populated as experiment proceeds -->
+**quantum_bench paper (this work)**
+- Title: A Multi-Agent LLM Experiment Revealing Architect-Level Failure Modes
+  in Scientific Software Development
+- Repository: https://github.com/unixneo/quantum_bench
+- Author: Bass, T. (2026)
+
+**ORCID:** 0000-0001-9368-6838

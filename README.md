@@ -7,13 +7,13 @@ A Rails application for LLM-assisted computation of applied quantum mechanics pr
 This project is a controlled experiment in multi-agent LLM-assisted scientific software development:
 
 **Can Claude (architect) and Codex (coder) produce correct numerical implementations
-of applied quantum mechanics problems that agree with pure Ruby benchmark computations
-derived from first principles?**
+of applied quantum mechanics problems that agree with peer-reviewed literature values
+from Griffiths?**
 
 This is not a physics simulation platform. It is not a quantum computing framework.
 It is a deterministic numerical computation engine that implements exact analytical
-solutions to canonical quantum mechanics problems and compares LLM-generated
-implementations against pure Ruby benchmark computations.
+solutions to canonical quantum mechanics problems and validates computed results
+against Griffiths peer-reviewed literature values.
 
 The research contribution is the development workflow, the error taxonomy, and the
 validation methodology -- not the physics results themselves.
@@ -24,8 +24,7 @@ This project follows a blackboard-style orchestration model:
 
 - Problem: the blackboard state
 - BenchmarkKS: pure Ruby reference computation (ground truth)
-- LlmKS: LLM-generated Ruby implementation
-- EvaluationKS: numerical comparison, pass/fail, error classification
+- EvaluationKS: numerical comparison against Griffiths literature values, pass/fail, error classification
 
 ## Test Vehicle
 

@@ -3,8 +3,14 @@
 ## Purpose
 
 This document records errors made by the evaluated LLM (Claude Sonnet) when
-solving quantum mechanics problems in the quantum_bench experiment. These are
-experimental results, not workflow errors.
+solving quantum mechanics problems via API calls during the quantum_bench experiment.
+
+**Historical note:** The API-call architecture documented here was subsequently
+removed (see CLAUDE_ERRORS.md Error Group 1). The LLM KS layer was an unauthorized
+architectural addition by Claude that contradicted the stated experiment design.
+These errors are retained as historical record of what was observed during that
+phase. They do not reflect the final experiment design, which compares benchmark
+KS Ruby computations directly against Griffiths peer-reviewed literature values.
 
 Error taxonomy: correct, arithmetic_error, wrong_theorem,
 normalization_failure, hallucinated_step, wrong_boundary.
