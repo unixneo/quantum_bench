@@ -82,9 +82,19 @@ Limited to sources relevant to:
 
 **References**
 - GitHub: https://github.com/unixneo/protein_variants
-- Code DOI: https://doi.org/10.5281/zenodo.19436320
+- Bass, T. (2026). protein_variants: A Controlled Experiment in LLM-Assisted Scientific Software Development Using a Blackboard Knowledge Source Architecture for Deterministic Protein Missense Variant Interpretation (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.19436320
 - Paper DOI: https://doi.org/10.5281/zenodo.19438177
 - ResearchGate: https://www.researchgate.net/publication/403537592_A_Deterministic_Blackboard_Knowledge_Source_Engine_for_Protein_Missense_Variant_Interpretation_A_Controlled_Experiment_in_LLM-_Assisted_Scientific_Software_Development
+
+### stellar_pop
+
+**Use in project**
+- First experiment in this series (astrophysics)
+- Ground truth too diffuse -- evaluation loop not closed
+- Informed the tighter ground truth design used in protein_variants and quantum_bench
+
+**Reference**
+- neounix. (2026). StellarPop: A Ruby on Rails Stellar Population Synthesis Pipeline (v0.3.8). Zenodo. https://doi.org/10.5281/zenodo.19412078
 
 ---
 

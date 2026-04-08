@@ -48,9 +48,14 @@ development:
 
 1. stellar_pop -- astrophysics. Evaluation loop not closed; diffuse ground
    truth prevented classifiable error analysis.
+   neounix. (2026). StellarPop: A Ruby on Rails Stellar Population Synthesis
+   Pipeline (v0.3.8). Zenodo. https://doi.org/10.5281/zenodo.19412078
 2. protein_variants -- bioinformatics. Loop closed but problems too trivial;
    LLM errors were not meaningfully differentiable from implementation noise.
-   DOI: 10.5281/zenodo.19436320
+   Bass, T. (2026). protein_variants: A Controlled Experiment in LLM-Assisted
+   Scientific Software Development Using a Blackboard Knowledge Source
+   Architecture for Deterministic Protein Missense Variant Interpretation
+   (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.19436320
 3. quantum_bench -- applied quantum mechanics. Tier 2 problems chosen for
    derivation complexity. Griffiths peer-reviewed values as ground truth.
    Evaluation loop fully closed.
@@ -262,13 +267,17 @@ that current LLMs cannot reliably provide autonomously.
 Griffiths, D.J. (2018). Introduction to Quantum Mechanics (3rd ed.).
 Cambridge University Press.
 
-Bass, T. (2026). protein_variants: A Deterministic Blackboard KS Architecture
-for Protein Missense Variant Interpretation. Zenodo.
-DOI: 10.5281/zenodo.19436320
+neounix. (2026). StellarPop: A Ruby on Rails Stellar Population Synthesis
+Pipeline (v0.3.8). Zenodo. https://doi.org/10.5281/zenodo.19412078
 
-Bass, T. (2026). Deterministic LLM Blackboard Pattern (DLBP).
-IAIT2026 Submission #6099. Zenodo.
-DOI: 10.5281/zenodo.19068475
+Bass, T. (2026). protein_variants: A Controlled Experiment in LLM-Assisted
+Scientific Software Development Using a Blackboard Knowledge Source
+Architecture for Deterministic Protein Missense Variant Interpretation
+(v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.19436320
+
+Bass, T. (2026). Deterministic Blackboard Pipelines with Specialized LLM
+Knowledge Sources. IAIT2026 Submission #6099. Zenodo.
+https://doi.org/10.5281/zenodo.19068475
 
 ---
 
