@@ -1,4 +1,4 @@
-# quantum_bench: A Multi-Agent LLM Experiment in Applied Quantum Mechanics Computation
+# quantum_bench: A Multi-Agent LLM Experiment Revealing Architect-Level Failure Modes in Scientific Software Development
 
 ## Abstract
 
